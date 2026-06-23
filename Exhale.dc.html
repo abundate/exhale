@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;1,16..72,400;1,16..72,500&amp;display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#F4EBDC">
+<meta name="description" content="A calm weekly ritual to close your work week — declutter your mind and celebrate your wins.">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Exhale">
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+<script>
+(function(){
+  window.__exhaleDeferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e){ e.preventDefault(); window.__exhaleDeferredPrompt = e; window.dispatchEvent(new Event('exhale-installable')); });
+  window.addEventListener('appinstalled', function(){ window.__exhaleDeferredPrompt = null; window.dispatchEvent(new Event('exhale-installed')); });
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', function(){ navigator.serviceWorker.register('sw.js').catch(function(){}); });
+  }
+})();
+</script>
+<style>
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  @keyframes breathe{0%,100%{transform:scale(.80);opacity:.5;}50%{transform:scale(1.08);opacity:.95;}}
+  @keyframes ring{0%,100%{transform:scale(.9);opacity:.35;}50%{transform:scale(1.15);opacity:.05;}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  textarea,input{font-family:inherit;}
+  textarea:focus,input:focus{outline:none;}
+  ::placeholder{color:#B7A98F;}
+  textarea::-webkit-scrollbar{width:8px;}
+  textarea::-webkit-scrollbar-thumb{background:#E4D8C5;border-radius:8px;}
+</style>
+</helmet>
+<div style="min-height:100vh;background:radial-gradient(125% 75% at 50% -5%, #FCF6EB 0%, #F4EBDC 50%, #EEE2CF 100%);font-family:'Hanken Grotesk',system-ui,sans-serif;color:#38312A;display:flex;flex-direction:column;align-items:center;">
+
+  <header style="width:100%;max-width:760px;display:flex;align-items:center;justify-content:space-between;padding:22px 26px;">
+    <div onClick="{{ goHome }}" style="display:flex;align-items:center;gap:10px;cursor:pointer;">
+      <img src="assets/abundate-mark.png" alt="Abundate" width="30" height="30" style="width:30px;height:30px;display:block;flex:none;">
+      <div style="display:flex;flex-direction:column;line-height:1;">
+        <span style="font-family:'Newsreader',Georgia,serif;font-size:21px;font-weight:500;letter-spacing:.01em;color:#0C4F37;">Exhale</span>
+        <span style="font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#A8957B;margin-top:3px;">by Abundate</span>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:2px;">
+      <button onClick="{{ goLog }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;font-weight:500;color:#7A6F5F;cursor:pointer;padding:8px 8px;letter-spacing:.01em;" style-hover="color:#38312A;">Your log</button>
+      <button onClick="{{ goSettings }}" aria-label="Settings" style="background:none;border:none;cursor:pointer;padding:8px 6px;display:flex;align-items:center;color:#7A6F5F;" style-hover="color:#38312A;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <line x1="4" y1="8" x2="20" y2="8"></line><circle cx="9" cy="8" r="2.6" fill="#F6EDDD"></circle>
+          <line x1="4" y1="16" x2="20" y2="16"></line><circle cx="15" cy="16" r="2.6" fill="#F6EDDD"></circle>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <sc-if value="{{ isInstallBanner }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:60;display:flex;justify-content:center;padding:14px 14px calc(14px + env(safe-area-inset-bottom));pointer-events:none;animation:fadeUp .5s ease both;">
+      <div style="pointer-events:auto;width:100%;max-width:460px;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:18px;box-shadow:0 10px 34px rgba(80,50,20,.18);padding:13px 15px;display:flex;align-items:center;gap:13px;">
+        <img src="assets/icon-192.png" alt="" width="42" height="42" style="width:42px;height:42px;border-radius:11px;flex:none;">
+        <div style="flex:1;min-width:0;">
+          <p style="font-size:14.5px;font-weight:600;color:#4A4136;margin:0 0 2px;">Keep Exhale on your home screen</p>
+          <sc-if value="{{ installIOS }}"><p style="font-size:13px;line-height:1.45;color:#8A7C68;margin:0;">Tap the Share icon, then <strong style="font-weight:600;color:#6F6454;">Add to Home Screen</strong>.</p></sc-if>
+          <sc-if value="{{ installAndroid }}"><p style="font-size:13px;line-height:1.45;color:#8A7C68;margin:0;">One tap to install — works offline, no app store.</p></sc-if>
+        </div>
+        <sc-if value="{{ installAndroid }}"><button onClick="{{ doInstall }}" style="background:#0C4F37;color:#FFF9F0;border:none;border-radius:30px;padding:10px 18px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;flex:none;" style-hover="filter:brightness(1.12);">Install</button></sc-if>
+        <button onClick="{{ dismissInstall }}" aria-label="Dismiss" style="background:none;border:none;cursor:pointer;color:#B7A589;font-size:22px;line-height:1;padding:4px 6px;flex:none;" style-hover="color:#7A6F5F;">×</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <main ref="{{ mainRef }}" style="flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 18px 64px;">
+
+    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Let's close<br>the week.</h1>
+        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">A few quiet questions to tie up loose ends — so your mind can stop carrying them, and you can actually rest.</p>
+        <button onClick="{{ begin }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Begin the exhale</button>
+        <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isOnboarding }}">
+      <div data-screen-label="Onboarding" style="max-width:540px;width:100%;padding:20px 14px 0;animation:fadeUp .6s ease both;">
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Welcome to Exhale</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;letter-spacing:-.01em;margin:0 0 14px;">A calmer way to close your week.</h1>
+        <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 30px;">Two quick things to set up — then you're ready for your first close.</p>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px;margin-bottom:16px;">
+          <h3 style="font-size:17px;font-weight:600;color:#4A4136;margin:0 0 5px;">Which day do you close your week?</h3>
+          <p style="font-size:14px;color:#9A8C78;margin:0 0 14px;">Pick the day your working week winds down.</p>
+          <div style="display:flex;gap:6px;">
+            <sc-for list="{{ dayOptions }}" as="d" hint-placeholder-count="7">
+              <div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div>
+            </sc-for>
+          </div>
+        </div>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px;margin-bottom:24px;">
+          <h3 style="font-size:17px;font-weight:600;color:#4A4136;margin:0 0 5px;">What matters most right now?</h3>
+          <p style="font-size:14px;color:#9A8C78;margin:0 0 14px;">Order your five areas by priority. You can change this anytime.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <sc-for list="{{ areaRankView }}" as="a" hint-placeholder-count="5">
+              <div draggable="true" onDragStart="{{ a.onDragStart }}" onDragOver="{{ a.onDragOver }}" onDrop="{{ a.onDrop }}" onDragEnd="{{ a.onDragEnd }}" style="{{ a.rowStyle }}">
+                <span style="font-size:14px;font-weight:700;color:#B7A589;width:16px;">{{ a.rank }}</span>
+                <div style="{{ a.dotStyle }}"></div>
+                <span style="flex:1;font-size:15px;font-weight:600;color:#4A4136;">{{ a.label }}</span>
+                <span style="display:flex;flex-direction:column;gap:3px;padding:4px 2px;cursor:grab;">
+                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
+                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
+                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+        <button onClick="{{ finishOnboarding }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Start using Exhale</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isRitual }}">
+      <div data-screen-label="Ritual" style="max-width:560px;width:100%;padding:14px 6px 0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#A8957B;">Step {{ stepNumber }} of {{ totalSteps }}</span>
+          <button onClick="{{ back }}" style="background:none;border:none;font-family:inherit;font-size:14px;color:#9A8C78;cursor:pointer;padding:6px 4px;" style-hover="color:#38312A;">{{ backLabel }}</button>
+        </div>
+        <div style="height:5px;background:#E7DAC6;border-radius:40px;overflow:hidden;margin-bottom:38px;">
+          <div style="{{ progressFillStyle }}"></div>
+        </div>
+
+        <sc-if value="{{ stepWins }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">What went well this week?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">Name everything you got done – especially the small wins you forgot to celebrate. Use your calendar / to-do list to remind yourself of everything you accomplished, big or small.</p>
+            <div style="display:flex;gap:10px;margin-bottom:16px;">
+              <input value="{{ winInput }}" onChange="{{ onWinInput }}" onKeyDown="{{ onWinKey }}" placeholder="e.g. Took a proper lunch break every day" style="flex:1;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:13px;padding:14px 16px;font-size:16px;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;">
+              <button onClick="{{ addWin }}" style="background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:13px;width:50px;font-size:24px;color:#9A8C78;cursor:pointer;flex:none;" style-hover="border-color:#C4895F;color:#C4895F;">+</button>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <sc-for list="{{ winChips }}" as="chip" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F4E9D8;border-radius:12px;padding:7px 8px 7px 9px;animation:fadeUp .35s ease both;">
+                  <sc-if value="{{ chip.editing }}">
+                    <input value="{{ chip.text }}" ref="{{ chip.inputRef }}" onChange="{{ chip.onEdit }}" onKeyDown="{{ chip.onEditKey }}" onBlur="{{ chip.commit }}" style="flex:1;background:#FFFDF9;border:1.5px solid #C4895F;border-radius:9px;padding:9px 11px;font-size:15.5px;color:#38312A;" style-focus="box-shadow:0 0 0 3px #F3E4D5;">
+                  </sc-if>
+                  <sc-if value="{{ chip.notEditing }}">
+                    <span onClick="{{ chip.edit }}" style="flex:1;font-size:15.5px;line-height:1.4;color:#4A4136;cursor:text;padding:6px 0 6px 8px;" style-hover="color:#8A6A4A;">{{ chip.text }}</span>
+                    <button onClick="{{ chip.remove }}" style="background:none;border:none;font-size:19px;color:#B7A589;cursor:pointer;line-height:1;flex:none;padding:2px 8px;" style-hover="color:#8A6A4A;">×</button>
+                  </sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stepHighlight }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <p style="text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">The headline</p>
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">If this week had a title, what would it be?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">The one thing you most want to celebrate — the moment that defined the week. This becomes the name of your week.</p>
+            <input value="{{ draftHighlight }}" onChange="{{ onHighlight }}" placeholder="The week I finally…" style="width:100%;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:16px 18px;font-family:'Newsreader',Georgia,serif;font-size:21px;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;">
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stepFocus }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <p style="text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">This period's focus</p>
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">Did you move towards who you're becoming?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 22px;">Your intentions for this period. Note one small step you took, or the next one you'll take.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:18px;">
+              <sc-for list="{{ activeGoalsView }}" as="g" hint-placeholder-count="2">
+                <div style="background:#FBF6EE;border:1.5px solid #EFE4D2;border-radius:13px;padding:13px 15px;">
+                  <span style="font-size:15.5px;color:#4A4136;line-height:1.4;">{{ g.text }}</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;">
+                    <sc-for list="{{ g.tags }}" as="t" hint-placeholder-count="2"><span style="{{ t.style }}">{{ t.label }}</span></sc-for>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <textarea value="{{ draftGoalNote }}" onChange="{{ onGoalNote }}" placeholder="One small step towards it this week…" style="width:100%;min-height:120px;resize:none;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:16px 18px;font-size:16.5px;line-height:1.6;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;"></textarea>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stepDifferently }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">What will you do differently next week?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">Anything you want to remember, adjust, or keep going with.</p>
+            <textarea value="{{ draftDifferently }}" onChange="{{ onDifferently }}" placeholder="Set myself a &quot;One Thing&quot; priority to complete each workday…" style="width:100%;min-height:150px;resize:none;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:17px 18px;font-size:16.5px;line-height:1.6;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;"></textarea>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stepCourage }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">One thing to start or stop.</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">What's one habit or thought pattern — something to start doing, or to stop doing — that would help you live a little more courageously?</p>
+            <textarea value="{{ draftCourage }}" onChange="{{ onCourage }}" placeholder="Stop saying yes to calls I don't need to be on…" style="width:100%;min-height:150px;resize:none;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:17px 18px;font-size:16.5px;line-height:1.6;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;"></textarea>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ stepAreas }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">How did your week feel?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 26px;">Across five areas, rate the <strong style="font-weight:600;color:#4A4136;">effort</strong> you put in and the <strong style="font-weight:600;color:#4A4136;">outcome</strong> you got. A little on the left, a lot on the right. No wrong answers.</p>
+            <div style="display:flex;flex-direction:column;gap:22px;">
+              <sc-for list="{{ areaRows }}" as="area" hint-placeholder-count="5">
+                <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:18px 18px 16px;">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px;">
+                    <div style="{{ area.dotStyle }}"></div>
+                    <span style="font-size:16px;font-weight:600;color:#4A4136;">{{ area.label }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">
+                    <span style="font-size:13px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;width:74px;">Effort</span>
+                    <div style="display:flex;gap:9px;">
+                      <sc-for list="{{ area.effortDots }}" as="d" hint-placeholder-count="5">
+                        <button onClick="{{ d.set }}" style="{{ d.style }}"></button>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;">
+                    <span style="font-size:13px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;width:74px;">Outcome</span>
+                    <div style="display:flex;gap:9px;">
+                      <sc-for list="{{ area.outcomeDots }}" as="d" hint-placeholder-count="5">
+                        <button onClick="{{ d.set }}" style="{{ d.style }}"></button>
+                      </sc-for>
+                    </div>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:20px 18px;margin-top:22px;">
+              <p style="font-size:16px;font-weight:600;color:#4A4136;margin:0 0 4px;">How satisfied are you with your week overall?</p>
+              <p style="font-size:14px;line-height:1.5;color:#9A8C78;margin:0 0 16px;">One honest gut-feeling — not the maths of the areas above.</p>
+              <div style="display:flex;gap:14px;justify-content:center;margin-bottom:12px;">
+                <sc-for list="{{ satisfactionDots }}" as="d" hint-placeholder-count="5">
+                  <button onClick="{{ d.set }}" style="{{ d.style }}"></button>
+                </sc-for>
+              </div>
+              <div style="display:flex;justify-content:space-between;max-width:300px;margin:0 auto;">
+                <span style="font-size:12px;color:#9A8C78;">Not at all</span>
+                <span style="font-size:12px;color:#9A8C78;">Deeply</span>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:14px;margin-top:34px;">
+          <button onClick="{{ next }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ continueLabel }}</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isComplete }}">
+      <div data-screen-label="Complete" style="max-width:520px;width:100%;text-align:center;padding:40px 14px 0;animation:fadeUp .8s ease both;">
+        <div style="position:relative;width:190px;height:190px;margin:10px auto 38px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:42px;line-height:1.08;margin:0 0 20px;letter-spacing:-.01em;">Your week<br>is closed.</h1>
+        <sc-if value="{{ entryHasHighlight }}">
+          <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:18px 22px;margin:0 auto 30px;max-width:420px;">
+            <p style="font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#A8957B;margin:0 0 8px;">The week of</p>
+            <p style="font-family:'Newsreader',Georgia,serif;font-size:22px;line-height:1.3;color:#38312A;margin:0;">{{ entryHighlight }}</p>
+          </div>
+        </sc-if>
+        <p style="font-size:17.5px;line-height:1.65;color:#6F6454;margin:0 auto 38px;max-width:420px;">Whatever's still unfinished, let it go for now. Your mind keeps working on it quietly in the background — that's the point. Step away, be present, and come back next week with fresh eyes.</p>
+        <div style="display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;">
+          <button onClick="{{ seeThisWeek }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">See this week</button>
+          <button onClick="{{ goHome }}" style="background:none;border:1.5px solid #DBCDB6;border-radius:40px;padding:14px 28px;font-family:inherit;font-size:16px;font-weight:600;color:#6F6454;cursor:pointer;" style-hover="border-color:#A8957B;color:#38312A;">Done for the week</button>
+        </div>
+        <button onClick="{{ replay }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:24px;letter-spacing:.03em;" style-hover="color:#8A6A4A;">↻ replay the close</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isLog }}">
+      <div data-screen-label="Log" style="max-width:600px;width:100%;padding:14px 8px 0;animation:fadeUp .5s ease both;">
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:38px;margin:0 0 10px;letter-spacing:-.01em;">Your log</h1>
+        <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 20px;max-width:440px;">Every week you've closed. Come back every few months to notice which weeks felt good — and what made them so.</p>
+        <sc-if value="{{ hasEntries }}">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <sc-for list="{{ entriesView }}" as="e" hint-placeholder-count="3">
+              <div onClick="{{ e.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px 22px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">
+                  <span style="font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ e.dateLabel }}</span>
+                  <div style="display:flex;gap:5px;">
+                    <sc-for list="{{ e.dots }}" as="d" hint-placeholder-count="5">
+                      <div style="{{ d.style }}"></div>
+                    </sc-for>
+                  </div>
+                </div>
+                <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.3;color:#38312A;margin:0 0 8px;">{{ e.topWin }}</p>
+                <p style="font-size:14.5px;color:#9A8C78;margin:0;">{{ e.metaLabel }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ emptyLog }}">
+          <div style="text-align:center;padding:50px 20px;background:#FCF8F1;border:1.5px dashed #E0D2BC;border-radius:18px;">
+            <p style="font-size:16px;color:#9A8C78;margin:0 0 20px;">You haven't closed a week yet.</p>
+            <button onClick="{{ begin }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);">Begin your first close</button>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isEntry }}">
+      <div data-screen-label="Entry detail" style="max-width:600px;width:100%;padding:14px 8px 0;animation:fadeUp .5s ease both;">
+        <button onClick="{{ goLog }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;color:#9A8C78;cursor:pointer;padding:6px 0;margin-bottom:14px;" style-hover="color:#38312A;">← Back to log</button>
+        <sc-if value="{{ entryHasHighlight }}">
+          <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 8px;">{{ entryDate }}</p>
+          <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:32px;line-height:1.18;margin:0 0 28px;letter-spacing:-.01em;">{{ entryHighlight }}</h1>
+        </sc-if>
+        <sc-if value="{{ entryNoHighlight }}">
+          <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:34px;margin:0 0 28px;letter-spacing:-.01em;">{{ entryDate }}</h1>
+        </sc-if>
+
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:20px;padding:24px 22px 20px;margin-bottom:30px;">
+          <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 18px;text-align:center;">Effort &nbsp;×&nbsp; Outcome</p>
+          <div style="position:relative;width:100%;max-width:300px;aspect-ratio:1;margin:0 auto;background:linear-gradient(135deg,#F8F0E2,#F3E9D7);border-radius:16px;border:1px solid #EADCC6;">
+            <div style="position:absolute;left:50%;top:8%;bottom:8%;width:1px;background:#E2D3BB;"></div>
+            <div style="position:absolute;top:50%;left:8%;right:8%;height:1px;background:#E2D3BB;"></div>
+            <span style="position:absolute;top:6px;left:50%;transform:translateX(-50%);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#BBA98D;">More effort</span>
+            <span style="position:absolute;bottom:6px;right:10px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#BBA98D;">Better outcome →</span>
+            <sc-for list="{{ plotDots }}" as="p" hint-placeholder-count="5">
+              <div style="{{ p.wrapStyle }}">
+                <div style="{{ p.dotStyle }}"></div>
+              </div>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:center;margin-top:22px;">
+            <sc-for list="{{ plotDots }}" as="p" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:7px;">
+                <div style="{{ p.legendStyle }}"></div>
+                <span style="font-size:13px;color:#7A6F5F;">{{ p.label }}</span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ entryHasWins }}">
+          <div style="margin-bottom:26px;">
+            <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 14px;">What went well</h3>
+            <div style="display:flex;flex-direction:column;gap:10px;">
+              <sc-for list="{{ entryWins }}" as="w" hint-placeholder-count="3">
+                <div style="display:flex;gap:12px;align-items:flex-start;">
+                  <div style="{{ checkStyle }}"></div>
+                  <span style="font-size:16.5px;line-height:1.45;color:#4A4136;">{{ w.text }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ entryHasDifferently }}">
+          <div style="margin-bottom:26px;">
+            <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 12px;">Doing differently</h3>
+            <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.5;color:#38312A;margin:0;">{{ entryDifferently }}</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ entryHasCourage }}">
+          <div style="margin-bottom:20px;">
+            <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 12px;">A braver step</h3>
+            <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.5;color:#38312A;margin:0;">{{ entryCourage }}</p>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isInsights }}">
+      <div data-screen-label="Insights" style="max-width:600px;width:100%;padding:14px 8px 0;animation:fadeUp .5s ease both;">
+        <button onClick="{{ goLog }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;color:#9A8C78;cursor:pointer;padding:6px 0;margin-bottom:14px;" style-hover="color:#38312A;">← Back to log</button>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:38px;margin:0 0 8px;letter-spacing:-.01em;">Your patterns</h1>
+        <p style="font-size:15.5px;color:#9A8C78;margin:0 0 18px;">{{ insightsSubtitle }}</p>
+        <button onClick="{{ startReview }}" style="display:flex;align-items:center;justify-content:space-between;gap:8px;width:100%;background:#F4E9D8;border:1.5px solid #E7DAC6;border-radius:14px;padding:15px 18px;font-family:inherit;font-size:15px;font-weight:600;color:#5A4A38;cursor:pointer;margin-bottom:26px;transition:all .2s ease;" style-hover="border-color:#C9B79A;transform:translateY(-1px);">
+          <span>Start your {{ cadenceWord }} review</span>
+          <span style="font-size:18px;">→</span>
+        </button>
+        <sc-if value="{{ hasReviews }}">
+          <button onClick="{{ goReviews }}" style="display:flex;align-items:center;gap:6px;background:none;border:none;font-family:inherit;font-size:14px;font-weight:600;color:#9A8C78;cursor:pointer;padding:0 2px;margin:-16px 0 26px;" style-hover="color:#38312A;">See your past reviews →</button>
+        </sc-if>
+
+        <sc-if value="{{ hasSatisfaction }}">
+          <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:20px;padding:22px 22px 18px;margin-bottom:24px;">
+            <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:6px;">
+              <div>
+                <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 8px;">Overall satisfaction</p>
+                <div style="display:flex;align-items:baseline;gap:6px;">
+                  <span style="font-family:'Newsreader',Georgia,serif;font-size:38px;line-height:1;color:#38312A;">{{ satAvgLabel }}</span>
+                  <span style="font-size:14px;color:#9A8C78;">avg / 5</span>
+                </div>
+                <p style="font-size:13.5px;color:#8A7E6C;margin:8px 0 0;">{{ satDirWord }} · latest {{ satLatest }}/5</p>
+              </div>
+              <span style="{{ satArrowStyle }}">{{ satArrow }}</span>
+            </div>
+            <svg viewBox="0 0 100 40" preserveAspectRatio="none" style="width:100%;height:54px;display:block;overflow:visible;margin-top:8px;">
+              <polyline points="{{ satPts }}" fill="none" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke" style="{{ satLineStyle }}"></polyline>
+            </svg>
+          </div>
+        </sc-if>
+
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:20px;padding:24px 22px 22px;margin-bottom:24px;">
+          <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 18px;text-align:center;">Where effort meets outcome</p>
+          <p style="font-size:13.5px;line-height:1.5;color:#8A7E6C;margin:0 auto 18px;max-width:340px;text-align:center;">Each area, averaged across every week you've closed.</p>
+          <div style="display:flex;align-items:stretch;gap:7px;max-width:328px;margin:0 auto;">
+            <div style="display:flex;align-items:center;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#BBA98D;white-space:nowrap;">← less effort &nbsp;·&nbsp; more effort →</span></div>
+            <div style="position:relative;flex:1;aspect-ratio:1;background:linear-gradient(135deg,#F8F0E2,#F3E9D7);border-radius:16px;border:1px solid #EADCC6;">
+              <div style="position:absolute;left:50%;top:8%;bottom:8%;width:1px;background:#E2D3BB;"></div>
+              <div style="position:absolute;top:50%;left:8%;right:8%;height:1px;background:#E2D3BB;"></div>
+              <span style="position:absolute;top:8px;right:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Thriving</span>
+              <span style="position:absolute;top:8px;left:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Grinding</span>
+              <span style="position:absolute;bottom:8px;right:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Flowing</span>
+              <span style="position:absolute;bottom:8px;left:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Resting</span>
+              <sc-for list="{{ aggPlotDots }}" as="p" hint-placeholder-count="5">
+                <div style="{{ p.wrapStyle }}"><div style="{{ p.dotStyle }}"></div></div>
+              </sc-for>
+            </div>
+          </div>
+          <p style="font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#BBA98D;text-align:center;margin:9px 0 0;padding-left:16px;">← lower outcome &nbsp;·&nbsp; higher outcome →</p>
+          <div style="display:flex;flex-wrap:wrap;gap:9px 16px;justify-content:center;margin-top:18px;">
+            <sc-for list="{{ aggPlotDots }}" as="p" hint-placeholder-count="5">
+              <div style="display:flex;align-items:center;gap:7px;"><div style="{{ p.legendStyle }}"></div><span style="font-size:12.5px;color:#7A6F5F;">{{ p.label }}</span></div>
+            </sc-for>
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:11px;margin-bottom:34px;">
+          <sc-for list="{{ callouts }}" as="c" hint-placeholder-count="2">
+            <div style="display:flex;align-items:flex-start;gap:12px;background:#FBF6EE;border:1.5px solid #EFE4D2;border-radius:14px;padding:14px 16px;">
+              <div style="{{ c.dotStyle }}"></div>
+              <div style="font-size:15px;line-height:1.45;"><span style="font-weight:600;color:#4A4136;">{{ c.label }}</span><span style="color:#6F6454;"> — {{ c.text }}</span></div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 7px;">Area by area</h3>
+        <p style="font-size:12.5px;color:#9A8C78;margin:0 0 14px;">Thin line is effort, the thick coloured line is outcome — across each week.</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:34px;">
+          <sc-for list="{{ areaTrends }}" as="a" hint-placeholder-count="5">
+            <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:14px;padding:13px 16px;display:flex;align-items:center;gap:14px;">
+              <div style="flex:none;width:120px;">
+                <div style="display:flex;align-items:center;gap:7px;margin-bottom:4px;"><div style="{{ a.dotStyle }}"></div><span style="font-size:14px;font-weight:600;color:#4A4136;">{{ a.label }}</span></div>
+                <div style="display:flex;align-items:center;gap:5px;"><span style="font-size:12.5px;color:#9A8C78;">outcome {{ a.latestOutcome }}/5</span><span style="{{ a.arrowStyle }}">{{ a.arrow }}</span></div>
+              </div>
+              <div style="flex:1;min-width:0;">
+                <svg viewBox="0 0 100 36" preserveAspectRatio="none" style="width:100%;height:38px;display:block;overflow:visible;">
+                  <polyline points="{{ a.ePts }}" fill="none" stroke="#CBBDA4" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline>
+                  <polyline points="{{ a.oPts }}" fill="none" stroke="{{ a.strokeColor }}" stroke-width="2.2" stroke-linejoin="round" stroke-linecap="round" vector-effect="non-scaling-stroke"></polyline>
+                </svg>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+
+        <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 6px;">Your best weeks</h3>
+        <p style="font-size:13px;color:#9A8C78;margin:0 0 14px;">Ranked by your overall satisfaction.</p>
+        <sc-if value="{{ hasBestWeeks }}">
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <sc-for list="{{ bestWeeks }}" as="b" hint-placeholder-count="2">
+              <div onClick="{{ b.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:18px 20px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+                  <span style="font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ b.dateLabel }}</span>
+                  <span style="font-size:13px;font-weight:700;color:#5A4A38;background:#F4E9D8;border-radius:8px;padding:3px 9px;">{{ b.score }}/5</span>
+                </div>
+                <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.32;color:#38312A;margin:0;">{{ b.win }}</p>
+                <sc-if value="{{ b.hasCourage }}">
+                  <p style="font-size:14.5px;color:#7A6F5F;margin:10px 0 0;">Braver step: {{ b.courage }}</p>
+                </sc-if>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noBestWeeks }}">
+          <div style="text-align:center;padding:30px 20px;background:#FCF8F1;border:1.5px dashed #E0D2BC;border-radius:16px;">
+            <p style="font-size:14.5px;line-height:1.55;color:#9A8C78;margin:0;">Your highest-rated weeks on overall satisfaction will show up here. Keep closing weeks to see your best ones.</p>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isReview }}">
+      <div data-screen-label="Review" style="max-width:580px;width:100%;padding:14px 6px 0;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <span style="font-size:12.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#A8957B;">{{ cadenceWord }} review · {{ reviewStepNumber }}/{{ reviewTotal }}</span>
+          <button onClick="{{ reviewBack }}" style="background:none;border:none;font-family:inherit;font-size:14px;color:#9A8C78;cursor:pointer;padding:6px 4px;" style-hover="color:#38312A;">{{ reviewBackLabel }}</button>
+        </div>
+        <div style="height:5px;background:#E7DAC6;border-radius:40px;overflow:hidden;margin-bottom:34px;">
+          <div style="{{ reviewProgressStyle }}"></div>
+        </div>
+
+        <sc-if value="{{ rStepIntro }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:34px;line-height:1.12;margin:0 0 14px;letter-spacing:-.01em;">A bigger pause.</h2>
+            <p style="font-size:16.5px;line-height:1.6;color:#6F6454;margin:0 0 22px;">The weekly close clears your mind. This is different — a moment to check in on your big-picture progress and to stay accountable to the person you're becoming. You'll look back at the period, see what moved, and choose your next steps with intention.</p>
+            <div style="display:inline-flex;align-items:center;gap:8px;background:#F4E9D8;border-radius:12px;padding:11px 16px;"><span style="font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ reviewPeriodLabel }}</span></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ rStepLookback }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:31px;line-height:1.14;margin:0 0 12px;letter-spacing:-.01em;">Look back at the period.</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 18px;">Your strongest weeks — and the toughest. Change what "strongest" means below.</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:9px;">
+              <sc-for list="{{ digMetricOptions }}" as="m" hint-placeholder-count="2"><div onClick="{{ m.choose }}" style="{{ m.style }}">{{ m.label }}</div></sc-for>
+            </div>
+            <sc-if value="{{ digAreaApplies }}">
+              <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;">
+                <sc-for list="{{ digAreaOptions }}" as="o" hint-placeholder-count="6"><div onClick="{{ o.choose }}" style="{{ o.style }}">{{ o.label }}</div></sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ hasDigNote }}">
+              <p style="font-size:13.5px;line-height:1.5;color:#9A8C78;background:#FBF6EE;border:1.5px solid #EFE4D2;border-radius:12px;padding:12px 14px;margin:0 0 24px;">{{ reviewDigNote }}</p>
+            </sc-if>
+            <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 12px;">Strongest weeks</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:22px;">
+              <sc-for list="{{ lookbackStrong }}" as="w" hint-placeholder-count="3">
+                <div onClick="{{ w.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:14px;padding:15px 17px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ w.dateLabel }}</span><span style="font-size:13px;font-weight:700;color:#5A4A38;background:#F4E9D8;border-radius:8px;padding:3px 9px;">{{ w.score }}</span></div>
+                  <p style="font-family:'Newsreader',Georgia,serif;font-size:18px;color:#38312A;margin:8px 0 0;line-height:1.3;">{{ w.win }}</p>
+                </div>
+              </sc-for>
+            </div>
+            <sc-if value="{{ hasTough }}">
+              <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 12px;">Toughest week</p>
+              <div onClick="{{ lookbackTough.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:14px;padding:15px 17px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;"><span style="font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ lookbackTough.dateLabel }}</span><span style="font-size:13px;font-weight:700;color:#5A4A38;background:#F4E9D8;border-radius:8px;padding:3px 9px;">{{ lookbackTough.score }}</span></div>
+                <p style="font-family:'Newsreader',Georgia,serif;font-size:18px;color:#38312A;margin:8px 0 0;line-height:1.3;">{{ lookbackTough.win }}</p>
+              </div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ rStepTrends }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:31px;line-height:1.14;margin:0 0 10px;letter-spacing:-.01em;">How each area moved <span style="font-family:'Hanken Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#FFFFFF;background:#A8957B;border-radius:6px;padding:2px 7px;vertical-align:middle;">Beta</span></h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 20px;">Averaged across the period. The arrow shows the direction it moved within it.</p>
+            <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:20px;padding:24px 22px 20px;">
+              <div style="display:flex;align-items:stretch;gap:7px;max-width:328px;margin:0 auto;">
+                <div style="display:flex;align-items:center;"><span style="writing-mode:vertical-rl;transform:rotate(180deg);font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#BBA98D;white-space:nowrap;">← less effort &nbsp;·&nbsp; more effort →</span></div>
+                <div style="position:relative;flex:1;aspect-ratio:1;background:linear-gradient(135deg,#F8F0E2,#F3E9D7);border-radius:16px;border:1px solid #EADCC6;">
+                  <div style="position:absolute;left:50%;top:8%;bottom:8%;width:1px;background:#E2D3BB;"></div>
+                  <div style="position:absolute;top:50%;left:8%;right:8%;height:1px;background:#E2D3BB;"></div>
+                  <span style="position:absolute;top:8px;right:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Thriving</span>
+                  <span style="position:absolute;top:8px;left:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Grinding</span>
+                  <span style="position:absolute;bottom:8px;right:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Flowing</span>
+                  <span style="position:absolute;bottom:8px;left:10px;font-size:9.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#C3B295;">Resting</span>
+                  <sc-for list="{{ reviewScatter }}" as="p" hint-placeholder-count="5"><div style="{{ p.wrapStyle }}"><div style="{{ p.dotStyle }}"></div></div></sc-for>
+                </div>
+              </div>
+              <p style="font-size:10px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#BBA98D;text-align:center;margin:9px 0 0;padding-left:16px;">← lower outcome &nbsp;·&nbsp; higher outcome →</p>
+              <div style="display:flex;flex-direction:column;gap:9px;margin-top:18px;">
+                <sc-for list="{{ reviewLegend }}" as="l" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:9px;"><div style="{{ l.legendStyle }}"></div><span style="flex:1;font-size:13px;color:#7A6F5F;">{{ l.label }}</span><span style="{{ l.arrowStyle }}">{{ l.arrow }}</span></div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ rStepRate }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:31px;line-height:1.14;margin:0 0 12px;letter-spacing:-.01em;">How was this period, overall?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 8px;">Not just the highs or lows — the whole arc of it.</p>
+            <div style="display:flex;gap:14px;justify-content:center;margin:34px 0 16px;">
+              <sc-for list="{{ reviewRatingDots }}" as="d" hint-placeholder-count="5"><button onClick="{{ d.set }}" style="{{ d.style }}"></button></sc-for>
+            </div>
+            <div style="display:flex;justify-content:space-between;max-width:300px;margin:0 auto;"><span style="font-size:12px;color:#9A8C78;">Just got through</span><span style="font-size:12px;color:#9A8C78;">Truly thriving</span></div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ rStepReflect }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:31px;line-height:1.14;margin:0 0 12px;letter-spacing:-.01em;">What stands out, looking back?</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 22px;">A sentence or two. What did this period show you about who you're becoming?</p>
+            <textarea value="{{ reviewReflection }}" onChange="{{ onReflection }}" placeholder="Looking back over these weeks…" style="width:100%;min-height:170px;resize:none;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:17px 18px;font-size:16.5px;line-height:1.6;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;"></textarea>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ rStepCarry }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:31px;line-height:1.14;margin:0 0 12px;letter-spacing:-.01em;">Last period's intentions.</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 22px;">Keep the ones still worth pursuing. Retire the rest — letting go is progress too.</p>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <sc-for list="{{ carryGoals }}" as="g" hint-placeholder-count="2">
+                <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:14px;padding:15px 16px;">
+                  <span style="font-size:15.5px;color:#4A4136;line-height:1.4;">{{ g.text }}</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin:9px 0 12px;"><sc-for list="{{ g.tags }}" as="t" hint-placeholder-count="2"><span style="{{ t.style }}">{{ t.label }}</span></sc-for></div>
+                  <div style="display:flex;gap:8px;"><div onClick="{{ g.keep }}" style="{{ g.keepStyle }}">Keep going</div><div onClick="{{ g.retire }}" style="{{ g.retireStyle }}">Retire</div></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ rStepGoals }}">
+          <div style="animation:fadeUp .5s ease both;">
+            <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:31px;line-height:1.14;margin:0 0 12px;letter-spacing:-.01em;">The smallest next steps.</h2>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 20px;">Set one to three intentions for the coming period. For each, name the smallest next step — and the areas it touches.</p>
+            <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+              <sc-for list="{{ draftGoals }}" as="g" hint-placeholder-count="1">
+                <div style="background:#F4E9D8;border:1.5px solid #E7DAC6;border-radius:14px;padding:14px 16px;">
+                  <div style="display:flex;justify-content:space-between;gap:10px;align-items:flex-start;">
+                    <span style="font-size:15.5px;font-weight:600;color:#4A4136;line-height:1.4;">{{ g.text }}</span>
+                    <button onClick="{{ g.remove }}" style="background:none;border:none;font-size:18px;color:#B7A589;cursor:pointer;line-height:1;flex:none;padding:0 2px;" style-hover="color:#8A6A4A;">×</button>
+                  </div>
+                  <sc-if value="{{ g.hasNext }}"><p style="font-size:14px;color:#6F6454;margin:7px 0 0;">Next step: {{ g.next }}</p></sc-if>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:9px;"><sc-for list="{{ g.tags }}" as="t" hint-placeholder-count="1"><span style="{{ t.style }}">{{ t.label }}</span></sc-for></div>
+                </div>
+              </sc-for>
+            </div>
+            <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:16px;">
+              <input value="{{ newGoalText }}" onChange="{{ onNewGoalText }}" placeholder="An intention for the period…" style="width:100%;background:#FFFDF9;border:1.5px solid #E7DAC6;border-radius:11px;padding:12px 14px;font-size:15.5px;color:#38312A;margin-bottom:9px;" style-focus="border-color:#C4895F;box-shadow:0 0 0 3px #F3E4D5;">
+              <input value="{{ newGoalNext }}" onChange="{{ onNewGoalNext }}" placeholder="Smallest next step…" style="width:100%;background:#FFFDF9;border:1.5px solid #E7DAC6;border-radius:11px;padding:12px 14px;font-size:15.5px;color:#38312A;margin-bottom:12px;" style-focus="border-color:#C4895F;box-shadow:0 0 0 3px #F3E4D5;">
+              <p style="font-size:12.5px;color:#9A8C78;margin:0 0 9px;">Which areas does it touch?</p>
+              <div style="display:flex;flex-wrap:wrap;gap:7px;margin-bottom:14px;"><sc-for list="{{ goalAreaToggles }}" as="a" hint-placeholder-count="5"><div onClick="{{ a.toggle }}" style="{{ a.style }}">{{ a.label }}</div></sc-for></div>
+              <button onClick="{{ addGoal }}" style="width:100%;background:#F4E9D8;border:1.5px solid #E7DAC6;border-radius:11px;padding:12px;font-family:inherit;font-size:14.5px;font-weight:600;color:#5A4A38;cursor:pointer;" style-hover="border-color:#C9B79A;">+ Add intention</button>
+            </div>
+          </div>
+        </sc-if>
+
+        <div style="display:flex;align-items:center;justify-content:flex-end;gap:14px;margin-top:34px;">
+          <button onClick="{{ reviewNext }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">{{ reviewContinueLabel }}</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isReviewComplete }}">
+      <div data-screen-label="Review complete" style="max-width:520px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .8s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:6px auto 30px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:40px;line-height:1.08;margin:0 0 18px;letter-spacing:-.01em;">The period<br>is closed.</h1>
+        <p style="font-size:17px;line-height:1.6;color:#6F6454;margin:0 auto 30px;max-width:420px;">You've looked honestly at where you are and chosen your next steps. They'll meet you gently in each weekly close.</p>
+        <sc-if value="{{ hasReviewGoals }}">
+          <div style="text-align:left;background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:18px 20px;margin-bottom:28px;">
+            <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 14px;">Your focus this period</p>
+            <div style="display:flex;flex-direction:column;gap:14px;">
+              <sc-for list="{{ reviewCompleteGoals }}" as="g" hint-placeholder-count="2">
+                <div>
+                  <p style="font-family:'Newsreader',Georgia,serif;font-size:18px;color:#38312A;margin:0;line-height:1.35;">{{ g.text }}</p>
+                  <sc-if value="{{ g.hasNext }}"><p style="font-size:14px;color:#7A6F5F;margin:5px 0 0;">Next: {{ g.next }}</p></sc-if>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+        <button onClick="{{ goHome }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Back home</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPaywall }}">
+      <div data-screen-label="Paywall" style="max-width:480px;width:100%;padding:14px 12px 0;animation:fadeUp .5s ease both;">
+        <button onClick="{{ closePaywall }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;color:#9A8C78;cursor:pointer;padding:6px 0;margin-bottom:18px;" style-hover="color:#38312A;">← Not now</button>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Exhale Premium</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;letter-spacing:-.01em;margin:0 0 14px;">See how far you're really coming.</h1>
+        <p style="font-size:16.5px;line-height:1.55;color:#6F6454;margin:0 0 28px;">Your weekly close and log stay free, always. Premium adds the bigger picture — the patterns underneath the weeks, and the deeper ritual to act on them.</p>
+        <div style="display:flex;flex-direction:column;gap:16px;margin-bottom:30px;">
+          <sc-for list="{{ payFeatures }}" as="f" hint-placeholder-count="3">
+            <div style="display:flex;gap:13px;align-items:flex-start;">
+              <div style="{{ f.dotStyle }}"></div>
+              <div>
+                <p style="font-size:16.5px;font-weight:600;color:#4A4136;margin:0 0 3px;line-height:1.3;">{{ f.title }}</p>
+                <p style="font-size:15px;line-height:1.5;color:#7A6F5F;margin:0;">{{ f.text }}</p>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="display:flex;gap:11px;margin-bottom:18px;">
+          <div onClick="{{ chooseYearly }}" style="{{ yearlyCardStyle }}">
+            <span style="position:absolute;top:-9px;right:12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#FFF9F0;background:#7E8E6E;border-radius:20px;padding:3px 10px;">Save 30%</span>
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;"><div style="{{ yearlyRadioStyle }}"></div><span style="font-size:15px;font-weight:600;color:#4A4136;">Yearly</span></div>
+            <p style="font-family:'Newsreader',Georgia,serif;font-size:26px;color:#38312A;margin:0;line-height:1;">£42</p>
+            <p style="font-size:13px;color:#8A7E6C;margin:6px 0 0;">£3.50/mo · billed yearly</p>
+          </div>
+          <div onClick="{{ chooseMonthly }}" style="{{ monthlyCardStyle }}">
+            <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;"><div style="{{ monthlyRadioStyle }}"></div><span style="font-size:15px;font-weight:600;color:#4A4136;">Monthly</span></div>
+            <p style="font-family:'Newsreader',Georgia,serif;font-size:26px;color:#38312A;margin:0;line-height:1;">£5</p>
+            <p style="font-size:13px;color:#8A7E6C;margin:6px 0 0;">billed monthly</p>
+          </div>
+        </div>
+        <button onClick="{{ purchase }}" style="{{ payBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Start 7-day free trial</button>
+        <p style="font-size:13.5px;color:#9A8C78;text-align:center;margin:14px 0 0;">{{ purchaseNote }}</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isPaySuccess }}">
+      <div data-screen-label="Premium unlocked" style="max-width:480px;width:100%;text-align:center;padding:40px 14px 0;animation:fadeUp .8s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:10px auto 34px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">Exhale Premium</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:42px;line-height:1.08;margin:0 0 20px;letter-spacing:-.01em;">You're in.</h1>
+        <p style="font-size:17.5px;line-height:1.65;color:#6F6454;margin:0 auto 36px;max-width:400px;">Your patterns and the deeper review are open to you now — whenever you're ready for them.</p>
+        <button onClick="{{ finishPay }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Continue</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isSettings }}">
+      <div data-screen-label="Settings" style="max-width:560px;width:100%;padding:14px 8px 60px;animation:fadeUp .5s ease both;">
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:38px;margin:0 0 24px;letter-spacing:-.01em;">Settings</h1>
+
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:16px 20px;margin-bottom:26px;">
+          <p style="font-size:13.5px;line-height:1.5;color:#7A6F5F;margin:0;">Everything you write stays private on this device. Accounts &amp; sync are coming soon.</p>
+        </div>
+
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Your rhythm</p>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:18px 20px;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:600;color:#4A4136;margin:0 0 4px;">Close day</h3>
+          <p style="font-size:13.5px;color:#9A8C78;margin:0 0 14px;">The day your working week winds down.</p>
+          <div style="display:flex;gap:6px;">
+            <sc-for list="{{ settingsDayOptions }}" as="d" hint-placeholder-count="7"><div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div></sc-for>
+          </div>
+        </div>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:18px 20px;margin-bottom:14px;">
+          <h3 style="font-size:16px;font-weight:600;color:#4A4136;margin:0 0 4px;">What matters most</h3>
+          <p style="font-size:13.5px;color:#9A8C78;margin:0 0 14px;">Drag to reorder your five areas.</p>
+          <div style="display:flex;flex-direction:column;gap:8px;">
+            <sc-for list="{{ settingsAreaView }}" as="a" hint-placeholder-count="5">
+              <div draggable="true" onDragStart="{{ a.onDragStart }}" onDragOver="{{ a.onDragOver }}" onDrop="{{ a.onDrop }}" onDragEnd="{{ a.onDragEnd }}" style="{{ a.rowStyle }}">
+                <span style="font-size:14px;font-weight:700;color:#B7A589;width:16px;">{{ a.rank }}</span>
+                <div style="{{ a.dotStyle }}"></div>
+                <span style="flex:1;font-size:15px;font-weight:600;color:#4A4136;">{{ a.label }}</span>
+                <span style="display:flex;flex-direction:column;gap:3px;padding:4px 2px;cursor:grab;">
+                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
+                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
+                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
+                </span>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Reminders</p>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;margin-bottom:26px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;">
+            <div><p style="font-size:15.5px;font-weight:600;color:#4A4136;margin:0 0 2px;">Weekly close nudge</p><p style="font-size:13.5px;color:#9A8C78;margin:0;">Every {{ closeDayLabel }}.</p></div>
+            <div onClick="{{ toggleRemWeekly }}" style="{{ remWeeklyStyle }}"><div style="{{ remWeeklyKnob }}"></div></div>
+          </div>
+          <p style="font-size:12.5px;line-height:1.5;color:#B0A287;margin:0 0 14px;">Reminders arrive once notifications are switched on — coming with the mobile app.</p>
+        </div>
+
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Appearance</p>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:18px 20px;margin-bottom:26px;">
+          <h3 style="font-size:16px;font-weight:600;color:#4A4136;margin:0 0 4px;">Accent</h3>
+          <p style="font-size:13.5px;color:#9A8C78;margin:0 0 14px;">The colour of your orb and highlights.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <sc-for list="{{ accentSwatches }}" as="a" hint-placeholder-count="3"><div onClick="{{ a.choose }}" style="{{ a.style }}"><div style="{{ a.swatchStyle }}"></div><span>{{ a.label }}</span></div></sc-for>
+          </div>
+        </div>
+
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Your data</p>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;margin-bottom:26px;">
+          <button onClick="{{ exportData }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:none;font-family:inherit;cursor:pointer;padding:15px 0;text-align:left;">
+            <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Export my data</span>
+            <span style="font-size:17px;color:#A8957B;">↓</span>
+          </button>
+          <div style="height:1px;background:#EFE4D2;"></div>
+          <sc-if value="{{ notConfirmDelete }}">
+            <button onClick="{{ requestDelete }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:none;font-family:inherit;cursor:pointer;padding:15px 0;text-align:left;">
+              <span style="font-size:15.5px;font-weight:600;color:#B5532F;">Delete account &amp; data</span>
+              <span style="font-size:17px;color:#CDA48E;">→</span>
+            </button>
+          </sc-if>
+          <sc-if value="{{ confirmDelete }}">
+            <div style="padding:16px 0;">
+              <p style="font-size:14.5px;line-height:1.55;color:#6F6454;margin:0 0 14px;">This erases every week and review stored on this device. It can't be undone.</p>
+              <div style="display:flex;gap:10px;">
+                <button onClick="{{ cancelDelete }}" style="flex:1;background:none;border:1.5px solid #DBCDB6;border-radius:30px;padding:11px;font-family:inherit;font-size:14.5px;font-weight:600;color:#6F6454;cursor:pointer;" style-hover="border-color:#A8957B;color:#38312A;">Keep my data</button>
+                <button onClick="{{ doDelete }}" style="flex:1;background:#B5532F;border:none;border-radius:30px;padding:11px;font-family:inherit;font-size:14.5px;font-weight:600;color:#FFF4ED;cursor:pointer;" style-hover="filter:brightness(.94);">Delete everything</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Help</p>
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;">
+          <a href="/cdn-cgi/l/email-protection#cfa7aaa3a3a08faeadbaa1abaebbaae1a0bda8" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;padding:15px 0;">
+            <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Contact support</span>
+            <span style="font-size:13.5px;color:#A8957B;"><span class="__cf_email__" data-cfemail="9af2fff6f6f5dafbf8eff4fefbeeffb4f5e8fd">[email&#160;protected]</span></span>
+          </a>
+          <div style="height:1px;background:#EFE4D2;"></div>
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 0;">
+            <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Exhale by Abundate</span>
+            <span style="font-size:13.5px;color:#9A8C78;">Version 1.0</span>
+          </div>
+        </div>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAuth }}">
+      <div data-screen-label="Sign in" style="max-width:440px;width:100%;padding:28px 14px 0;animation:fadeUp .5s ease both;">
+        <button onClick="{{ goSettings }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;color:#9A8C78;cursor:pointer;padding:6px 0;margin-bottom:18px;" style-hover="color:#38312A;">← Back</button>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Sign in</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;letter-spacing:-.01em;margin:0 0 14px;">Back up your weeks.</h1>
+        <p style="font-size:16.5px;line-height:1.55;color:#6F6454;margin:0 0 26px;">Enter your email and we'll send a magic link — no password to remember.</p>
+        <input value="{{ authEmail }}" onChange="{{ onAuthEmail }}" onKeyDown="{{ onAuthKey }}" type="email" placeholder="you@example.com" style="width:100%;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:16px 18px;font-size:16.5px;color:#38312A;margin-bottom:14px;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;">
+        <button onClick="{{ sendMagicLink }}" style="{{ payBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Send me a link</button>
+        <p style="font-size:13.5px;color:#9A8C78;text-align:center;margin:14px 0 0;">We'll only use this to sign you in and sync your data.</p>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isAuthSent }}">
+      <div data-screen-label="Check inbox" style="max-width:440px;width:100%;text-align:center;padding:44px 14px 0;animation:fadeUp .6s ease both;">
+        <div style="position:relative;width:150px;height:150px;margin:6px auto 30px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;margin:0 0 16px;letter-spacing:-.01em;">Check your inbox.</h1>
+        <p style="font-size:16.5px;line-height:1.6;color:#6F6454;margin:0 auto 32px;max-width:380px;">We sent a magic link to <strong style="font-weight:600;color:#4A4136;">{{ authEmail }}</strong>. Tap it to finish signing in.</p>
+        <button onClick="{{ confirmSignIn }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Continue (demo)</button>
+        <button onClick="{{ goAuth }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:22px;letter-spacing:.02em;display:block;width:100%;" style-hover="color:#8A6A4A;">Use a different email</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isReviews }}">
+      <div data-screen-label="Past reviews" style="max-width:600px;width:100%;padding:14px 8px 0;animation:fadeUp .5s ease both;">
+        <button onClick="{{ goInsights }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;color:#9A8C78;cursor:pointer;padding:6px 0;margin-bottom:14px;" style-hover="color:#38312A;">← Back to patterns</button>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:38px;margin:0 0 10px;letter-spacing:-.01em;">Past reviews</h1>
+        <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;max-width:440px;">Every deeper pause you've taken — the periods you've looked back on and set intentions for.</p>
+        <sc-if value="{{ hasReviews }}">
+          <div style="display:flex;flex-direction:column;gap:14px;">
+            <sc-for list="{{ reviewsView }}" as="r" hint-placeholder-count="2">
+              <div onClick="{{ r.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px 22px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:8px;">
+                  <span style="font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ r.dateLabel }}</span>
+                  <span style="font-size:13px;font-weight:700;color:#5A4A38;background:#F4E9D8;border-radius:8px;padding:3px 9px;">{{ r.ratingLabel }}</span>
+                </div>
+                <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.3;color:#38312A;margin:0 0 6px;">{{ r.periodLabel }}</p>
+                <p style="font-size:14.5px;color:#9A8C78;margin:0;">{{ r.goalsLabel }}</p>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{ noReviews }}">
+          <div style="text-align:center;padding:50px 20px;background:#FCF8F1;border:1.5px dashed #E0D2BC;border-radius:18px;">
+            <p style="font-size:16px;color:#9A8C78;margin:0;">You haven't completed a review yet.</p>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isReviewDetail }}">
+      <div data-screen-label="Review detail" style="max-width:600px;width:100%;padding:14px 8px 0;animation:fadeUp .5s ease both;">
+        <button onClick="{{ goReviews }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;color:#9A8C78;cursor:pointer;padding:6px 0;margin-bottom:14px;" style-hover="color:#38312A;">← Back to reviews</button>
+        <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 8px;">{{ reviewDetail.dateLabel }}</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:30px;line-height:1.18;margin:0 0 24px;letter-spacing:-.01em;">{{ reviewDetail.periodLabel }}</h1>
+
+        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px 22px;margin-bottom:24px;">
+          <p style="font-size:13px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#A8957B;margin:0 0 14px;">How the period felt</p>
+          <div style="display:flex;gap:14px;">
+            <sc-for list="{{ reviewDetail.ratingDots }}" as="d" hint-placeholder-count="5"><div style="{{ d.style }}"></div></sc-for>
+          </div>
+        </div>
+
+        <sc-if value="{{ reviewDetail.hasReflection }}">
+          <div style="margin-bottom:26px;">
+            <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 12px;">Looking back</h3>
+            <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.5;color:#38312A;margin:0;">{{ reviewDetail.reflection }}</p>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{ reviewDetail.hasGoals }}">
+          <div style="margin-bottom:20px;">
+            <h3 style="font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:#A8957B;margin:0 0 14px;">Intentions set</h3>
+            <div style="display:flex;flex-direction:column;gap:12px;">
+              <sc-for list="{{ reviewDetail.goals }}" as="g" hint-placeholder-count="2">
+                <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:14px;padding:16px 18px;">
+                  <p style="font-family:'Newsreader',Georgia,serif;font-size:18px;color:#38312A;margin:0;line-height:1.35;">{{ g.text }}</p>
+                  <sc-if value="{{ g.hasNext }}"><p style="font-size:14.5px;color:#7A6F5F;margin:7px 0 0;">Next step: {{ g.next }}</p></sc-if>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;align-items:center;">
+                    <sc-for list="{{ g.tags }}" as="t" hint-placeholder-count="2"><span style="{{ t.style }}">{{ t.label }}</span></sc-for>
+                    <sc-if value="{{ g.carried }}"><span style="font-size:11.5px;font-weight:600;color:#8A7E6C;background:#F4E9D8;border-radius:20px;padding:3px 9px;">Carried over</span></sc-if>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+      </div>
+    </sc-if>
+
+  </main>
+
+  <sc-if value="{{ dissolving }}">
+    <canvas ref="{{ canvasRef }}" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:60;pointer-events:none;"></canvas>
+  </sc-if>
+</div>
+</x-dc>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:880},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Abundate&quot;,&quot;Clay&quot;,&quot;Sage&quot;,&quot;Plum&quot;],&quot;default&quot;:&quot;Abundate&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;demoPremium&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Locked&quot;,&quot;Unlocked&quot;],&quot;default&quot;:&quot;Locked&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = {
+    screen: 'home',
+    step: 0,
+    winInput: '',
+    editingWin: null,
+    draft: this.blankDraft(),
+    entries: [],
+    viewId: null,
+    dissolving: false,
+    settings: this.loadSettings(),
+    reviews: [],
+    reviewDraft: null,
+    reviewStep: 0,
+    digMetric: 'satisfaction',
+    digArea: 'all',
+    newGoal: { text: '', next: '', areas: [] },
+    onb: { day: 'Friday', order: ['health', 'social', 'professional', 'household', 'spiritual'] },
+    dragKey: null,
+    payIntent: null,
+    planChoice: 'yearly',
+    authEmail: '',
+    sDragKey: null,
+    viewReviewId: null,
+    confirmDelete: false,
+  };
+
+  areaMeta = [
+    { key: 'health',       label: 'Health & fitness', color: '#C0683F' },
+    { key: 'social',       label: 'Friends & family', color: '#CC9A43' },
+    { key: 'professional', label: 'Work & productivity', color: '#7E8E6E' },
+    { key: 'household',    label: 'Home & admin',     color: '#6E8190' },
+    { key: 'spiritual',    label: 'Spirit & purpose', color: '#A06A8A' },
+  ];
+
+  canvasRef = React.createRef();
+  mainRef = React.createRef();
+
+  componentWillUnmount() { if (this._raf) cancelAnimationFrame(this._raf); if (this._safety) clearTimeout(this._safety); if (this._installCheck) { window.removeEventListener('exhale-installable', this._installCheck); window.removeEventListener('exhale-installed', this._installCheck); } }
+
+  blankDraft() {
+    return {
+      wins: [],
+      highlight: '',
+      differently: '',
+      courage: '',
+      goalNote: '',
+      satisfaction: 0,
+      areas: {
+        health: { e: 0, o: 0 }, social: { e: 0, o: 0 }, professional: { e: 0, o: 0 },
+        household: { e: 0, o: 0 }, spiritual: { e: 0, o: 0 },
+      },
+    };
+  }
+
+  componentDidMount() {
+    const rawEntries = localStorage.getItem('exhale_entries_v1');
+    let entries = [];
+    try { entries = JSON.parse(rawEntries || '[]'); } catch (e) {}
+    if (rawEntries === null && (!Array.isArray(entries) || !entries.length)) entries = this.seed();
+    if (!Array.isArray(entries)) entries = [];
+    let reviews = [];
+    try { reviews = JSON.parse(localStorage.getItem('exhale_reviews_v1') || '[]'); } catch (e) {}
+    if (!Array.isArray(reviews)) reviews = [];
+    const settings = this.loadSettings();
+    const screen = settings.onboarded ? 'home' : 'onboarding';
+    this.setState({ entries, reviews, settings, screen, onb: { day: settings.closeDay, order: settings.areaOrder.slice() } });
+
+    this._installCheck = () => {
+      const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
+      const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent || '') && !window.MSStream;
+      let dismissed = false;
+      try { dismissed = localStorage.getItem('exhale_install_dismissed_v1') === '1'; } catch (e) {}
+      this.setState({ installStandalone: standalone, installIsIOS: isIOS, installDismissed: dismissed, installCanPrompt: !!window.__exhaleDeferredPrompt });
+    };
+    this._installCheck();
+    window.addEventListener('exhale-installable', this._installCheck);
+    window.addEventListener('exhale-installed', this._installCheck);
+  }
+
+  seed() {
+    return [
+      { id: 's3', date: '2026-06-12',
+        wins: ['Shipped the onboarding redesign', 'Finally called the accountant back', 'Two real gym sessions'],
+        differently: 'Block the first two hours of each morning for deep work before opening Slack.',
+        courage: 'Stop saying yes to calls I don\u2019t actually need to be on.',
+        areas: { health:{e:4,o:3}, social:{e:2,o:3}, professional:{e:5,o:4}, household:{e:3,o:3}, spiritual:{e:2,o:2} }, satisfaction: 3, highlight: 'Shipped the onboarding redesign I’d been dreading' },
+      { id: 's2', date: '2026-06-05',
+        wins: ['Landed the Carter proposal', 'Cooked dinner four nights running'],
+        differently: 'Take a proper lunch break away from the desk instead of eating at the keyboard.',
+        courage: 'Start a 20-minute walk straight after lunch, every day.',
+        areas: { health:{e:2,o:2}, social:{e:4,o:4}, professional:{e:4,o:5}, household:{e:4,o:4}, spiritual:{e:3,o:3} }, satisfaction: 4, highlight: 'Landed the Carter proposal' },
+      { id: 's1', date: '2026-05-29',
+        wins: ['Took Friday afternoon off, guilt-free', 'Cleared the whole inbox'],
+        differently: 'Stop checking email after 7pm \u2014 it never changes anything that night.',
+        courage: 'Start journaling on Sunday evenings to set up the week.',
+        areas: { health:{e:3,o:4}, social:{e:3,o:2}, professional:{e:3,o:3}, household:{e:2,o:2}, spiritual:{e:4,o:4} }, satisfaction: 4, highlight: 'Took Friday afternoon off, completely guilt-free' },
+    ];
+  }
+
+  save(entries) {
+    try { localStorage.setItem('exhale_entries_v1', JSON.stringify(entries)); } catch (e) {}
+  }
+
+  defaultSettings() {
+    return { onboarded: false, closeDay: 'Friday', areaOrder: ['health', 'social', 'professional', 'household', 'spiritual'], cadence: 'quarterly', isPremium: false, reminders: { weeklyClose: true, review: true }, email: null, signedIn: false };
+  }
+  loadSettings() {
+    try { const s = JSON.parse(localStorage.getItem('exhale_settings_v1')); if (s && typeof s === 'object') return Object.assign(this.defaultSettings(), s); } catch (e) {}
+    return this.defaultSettings();
+  }
+  saveSettings(st) { try { localStorage.setItem('exhale_settings_v1', JSON.stringify(st)); } catch (e) {} }
+  saveReviews(r) { try { localStorage.setItem('exhale_reviews_v1', JSON.stringify(r)); } catch (e) {} }
+
+  areaLabel(k) { const a = this.areaMeta.find(x => x.key === k); return a ? a.label : k; }
+  areaColor(k) { const a = this.areaMeta.find(x => x.key === k); return a ? a.color : '#9A8C78'; }
+  cadenceWeeks() { const c = this.state.settings.cadence; if (c === 'monthly') return 4; if (c === '4weeks') return 4; return 13; }
+  activeGoals() { const r = this.state.reviews; return (r && r[0] && Array.isArray(r[0].goals)) ? r[0].goals.filter(g => !g.retired) : []; }
+  ritualSteps() { return this.activeGoals().length > 0 ? ['wins', 'highlight', 'focus', 'differently', 'courage', 'areas'] : ['wins', 'highlight', 'differently', 'courage', 'areas']; }
+  weekLabel(e) { return (e && e.highlight && e.highlight.trim()) || (e && e.wins && e.wins[0]) || 'A quiet week.'; }
+
+  setOnbDay(day) { this.setState(s => ({ onb: { ...s.onb, day } })); }
+  moveArea(key, dir) {
+    this.setState(s => {
+      const order = s.onb.order.slice();
+      const i = order.indexOf(key), j = i + dir;
+      if (j < 0 || j >= order.length) return {};
+      const t = order[i]; order[i] = order[j]; order[j] = t;
+      return { onb: { ...s.onb, order } };
+    });
+  }
+  onAreaDragOver(key, e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const dk = this.state.dragKey;
+    if (!dk || dk === key) return;
+    this.setState(s => {
+      const order = s.onb.order.slice();
+      const from = order.indexOf(dk), to = order.indexOf(key);
+      if (from < 0 || to < 0) return {};
+      order.splice(from, 1); order.splice(to, 0, dk);
+      return { onb: { ...s.onb, order } };
+    });
+  }
+  onAreaDrop(e) { if (e && e.preventDefault) e.preventDefault(); this.setState({ dragKey: null }); }
+  onAreaDragEnd() { this.setState({ dragKey: null }); }
+  finishOnboarding() {
+    const settings = Object.assign(this.defaultSettings(), { onboarded: true, closeDay: this.state.onb.day, areaOrder: this.state.onb.order.slice(), cadence: 'quarterly' });
+    this.saveSettings(settings);
+    this.setState({ settings, screen: 'home' });
+  }
+
+  periodStart() {
+    const r = this.state.reviews;
+    if (r && r[0] && r[0].date) return r[0].date;
+    const e = [...this.state.entries].sort((a, b) => a.date < b.date ? -1 : 1);
+    return e.length ? e[0].date : new Date().toISOString().slice(0, 10);
+  }
+  reviewSteps() {
+    const steps = ['intro', 'lookback', 'trends', 'rate', 'reflect'];
+    if (this.activeGoals().length > 0) steps.push('carry');
+    steps.push('goals');
+    return steps;
+  }
+  startReview() {
+    const carry = {};
+    this.activeGoals().forEach(g => { carry[g.id] = 'keep'; });
+    this.setState({
+      screen: 'review', reviewStep: 0,
+      reviewDraft: { reflection: '', rating: 0, goals: [], carry: carry, periodStart: this.periodStart(), periodEnd: new Date().toISOString().slice(0, 10) },
+      newGoal: { text: '', next: '', areas: [] }, digMetric: 'satisfaction', digArea: 'all',
+    });
+  }
+  reviewNext() {
+    const steps = this.reviewSteps();
+    if (this.state.reviewStep >= steps.length - 1) this.finishReview();
+    else this.setState(s => ({ reviewStep: s.reviewStep + 1 }));
+  }
+  reviewBack() { this.setState(s => s.reviewStep > 0 ? { reviewStep: s.reviewStep - 1 } : { screen: 'home' }); }
+  setReviewRating(n) { this.setState(s => ({ reviewDraft: { ...s.reviewDraft, rating: s.reviewDraft.rating === n ? n - 1 : n } })); }
+  setReflection(v) { this.setState(s => ({ reviewDraft: { ...s.reviewDraft, reflection: v } })); }
+  setCarry(id, val) { this.setState(s => ({ reviewDraft: { ...s.reviewDraft, carry: { ...s.reviewDraft.carry, [id]: val } } })); }
+  setDig(metric, area) { this.setState(s => ({ digMetric: metric != null ? metric : s.digMetric, digArea: area != null ? area : s.digArea })); }
+  toggleGoalArea(key) {
+    this.setState(s => {
+      const a = s.newGoal.areas.slice(); const i = a.indexOf(key);
+      if (i >= 0) a.splice(i, 1); else a.push(key);
+      return { newGoal: { ...s.newGoal, areas: a } };
+    });
+  }
+  setNewGoal(field, v) { this.setState(s => ({ newGoal: { ...s.newGoal, [field]: v } })); }
+  addGoal() {
+    const g = this.state.newGoal;
+    if (!g.text.trim()) return;
+    const goal = { id: 'g' + Date.now(), text: g.text.trim(), next: g.next.trim(), areas: g.areas.slice() };
+    this.setState(s => ({ reviewDraft: { ...s.reviewDraft, goals: [...s.reviewDraft.goals, goal] }, newGoal: { text: '', next: '', areas: [] } }));
+  }
+  removeGoal(id) { this.setState(s => ({ reviewDraft: { ...s.reviewDraft, goals: s.reviewDraft.goals.filter(x => x.id !== id) } })); }
+  finishReview() {
+    const d = this.state.reviewDraft;
+    const carried = this.activeGoals().filter(g => d.carry[g.id] === 'keep').map(g => ({ ...g, carried: true }));
+    const goals = [...d.goals, ...carried];
+    const review = { id: 'r' + Date.now(), date: new Date().toISOString().slice(0, 10), periodStart: d.periodStart, periodEnd: d.periodEnd, reflection: d.reflection, rating: d.rating, goals: goals };
+    const reviews = [review, ...this.state.reviews];
+    this.saveReviews(reviews);
+    const settings = Object.assign({}, this.state.settings, { lastReviewDate: review.date });
+    this.saveSettings(settings);
+    this.setState({ reviews, settings, screen: 'reviewComplete' });
+  }
+
+  openPaywall(intent) { this.setState({ screen: 'paywall', payIntent: intent }); }
+  choosePlan(p) { this.setState({ planChoice: p }); }
+  purchase() {
+    const settings = Object.assign({}, this.state.settings, { isPremium: true, plan: this.state.planChoice });
+    this.saveSettings(settings);
+    this.setState({ settings, screen: 'paySuccess' });
+  }
+  finishPay() {
+    const intent = this.state.payIntent;
+    if (intent === 'review') this.startReview();
+    else if (intent === 'settings') this.setState({ screen: 'settings', payIntent: null });
+    else this.setState({ screen: 'insights', payIntent: null });
+  }
+
+  dayStyle(sel) { const pal = this.palette(); return { padding: '9px 0', flex: 1, textAlign: 'center', borderRadius: '10px', fontSize: '13px', fontWeight: 600, cursor: 'pointer', border: '1.5px solid ' + (sel ? pal.c : '#E7DAC6'), background: sel ? pal.c : '#FCF8F1', color: sel ? '#FFF9F0' : '#7A6F5F', transition: 'all .15s ease' }; }
+  pillStyle(sel) { const pal = this.palette(); return { padding: '8px 14px', borderRadius: '20px', fontSize: '13.5px', fontWeight: 600, cursor: 'pointer', border: '1.5px solid ' + (sel ? pal.c : '#E7DAC6'), background: sel ? pal.bg : '#FCF8F1', color: sel ? '#5A4A38' : '#8A7E6C', transition: 'all .15s ease' }; }
+  tagStyle(key) { const c = this.areaColor(key); return { fontSize: '11.5px', fontWeight: 600, padding: '3px 9px', borderRadius: '20px', color: c, background: '#FFFFFF', border: '1px solid ' + c + '55' }; }
+  tagToggleStyle(sel, c) { return { fontSize: '12.5px', fontWeight: 600, padding: '7px 12px', borderRadius: '20px', cursor: 'pointer', color: sel ? '#FFFFFF' : c, background: sel ? c : '#FFFFFF', border: '1.5px solid ' + (sel ? c : c + '66'), transition: 'all .15s ease' }; }
+
+  palette() {
+    const p = {
+      Abundate: { c: '#2C7D63', soft: '#8FD3BA', bg: '#DCEFE5' },
+      Clay: { c: '#C0683F', soft: '#E9C6AF', bg: '#F3E2D3' },
+      Sage: { c: '#6F8161', soft: '#C2CDB4', bg: '#E2E8D7' },
+      Plum: { c: '#94688A', soft: '#D7BBD1', bg: '#ECDDE8' },
+    };
+    return p[(this.state.settings && this.state.settings.accent) || this.props.accent] || p.Abundate;
+  }
+
+  fmt(dateStr, opts) {
+    const d = (dateStr instanceof Date) ? dateStr : new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-US', opts);
+  }
+  ordinal(n) {
+    const s = ['th', 'st', 'nd', 'rd'], v = n % 100;
+    return n + (s[(v - 20) % 10] || s[v] || s[0]);
+  }
+  fmtUK(dateStr) {
+    const d = (dateStr instanceof Date) ? dateStr : new Date(dateStr + 'T00:00:00');
+    return d.toLocaleDateString('en-GB', { weekday: 'long' }) + ', ' + this.ordinal(d.getDate()) + ' ' + d.toLocaleDateString('en-GB', { month: 'long' });
+  }
+
+  begin() { this.setState({ screen: 'ritual', step: 0, winInput: '', draft: this.blankDraft() }); }
+
+  back() {
+    this.setState(s => s.step > 0 ? { step: s.step - 1 } : { screen: 'home' });
+  }
+
+  next() {
+    const steps = this.ritualSteps();
+    if (steps[this.state.step] === 'wins') {
+      const w = (this.state.winInput || '').trim();
+      if (w) {
+        this.setState(st => ({ winInput: '', draft: { ...st.draft, wins: [...st.draft.wins, w] } }), () => this.advance());
+        return;
+      }
+    }
+    this.advance();
+  }
+  advance() {
+    const steps = this.ritualSteps();
+    if (this.state.step >= steps.length - 1) this.complete();
+    else this.setState(s => ({ step: s.step + 1 }));
+  }
+
+  addWin() {
+    const w = (this.state.winInput || '').trim();
+    if (!w) return;
+    this.setState(s => ({ winInput: '', draft: { ...s.draft, wins: [...s.draft.wins, w] } }));
+  }
+  editWin(i) { this.setState({ editingWin: i }); }
+  updateWin(i, val) {
+    this.setState(s => { const wins = s.draft.wins.slice(); wins[i] = val; return { draft: { ...s.draft, wins } }; });
+  }
+  commitWin(i) {
+    this.setState(s => {
+      const wins = s.draft.wins.slice();
+      if (!(wins[i] || '').trim()) wins.splice(i, 1);
+      else wins[i] = wins[i].trim();
+      return { draft: { ...s.draft, wins }, editingWin: null };
+    });
+  }
+  removeWin(i) {
+    this.setState(s => ({ draft: { ...s.draft, wins: s.draft.wins.filter((_, j) => j !== i) }, editingWin: null }));
+  }
+  setArea(key, kind, n) {
+    this.setState(s => {
+      const cur = s.draft.areas[key][kind];
+      const val = cur === n ? n - 1 : n;
+      return { draft: { ...s.draft, areas: { ...s.draft.areas, [key]: { ...s.draft.areas[key], [kind]: val } } } };
+    });
+  }
+  setSatisfaction(n) {
+    this.setState(s => ({ draft: { ...s.draft, satisfaction: s.draft.satisfaction === n ? n - 1 : n } }));
+  }
+
+  complete() {
+    const id = 'e' + Date.now();
+    const entry = {
+      id,
+      date: new Date().toISOString().slice(0, 10),
+      wins: [...this.state.draft.wins],
+      highlight: (this.state.draft.highlight || '').trim(),
+      differently: this.state.draft.differently,
+      courage: this.state.draft.courage,
+      goalNote: this.state.draft.goalNote || '',
+      satisfaction: this.state.draft.satisfaction || 0,
+      areas: JSON.parse(JSON.stringify(this.state.draft.areas)),
+    };
+    const entries = [entry, ...this.state.entries];
+    this.save(entries);
+    this.setState({ entries, viewId: id }, () => this.beginClose());
+  }
+
+  beginClose() {
+    this.dissolveNode('[data-screen-label="Ritual"]', false, () => this.setState({ screen: 'complete' }));
+  }
+  replay() {
+    this.dissolveNode('[data-screen-label="Complete"]', true, null);
+  }
+
+  dissolveNode(sel, restore, onDone) {
+    const main = this.mainRef && this.mainRef.current;
+    const node = main ? main.querySelector(sel) : null;
+    if (!node) { if (onDone) onDone(); return; }
+    this.captureNode(node).then(cap => {
+      this.setState({ dissolving: true }, () => {
+        this.runShatter(cap, () => {
+          node.style.transition = 'none';
+          node.style.opacity = '0';
+        }, () => {
+          this.setState({ dissolving: false });
+          if (restore) {
+            node.style.transition = 'opacity .7s ease';
+            node.style.opacity = '1';
+          }
+          if (onDone) onDone();
+        });
+      });
+    }).catch(() => {
+      this.setState({ dissolving: false });
+      if (onDone) onDone();
+    });
+  }
+
+  captureNode(node) {
+    return new Promise((resolve, reject) => {
+      try {
+        const rect = node.getBoundingClientRect();
+        const w = Math.max(1, Math.ceil(rect.width));
+        const h = Math.max(1, Math.ceil(rect.height));
+        const clone = node.cloneNode(true);
+        clone.style.opacity = '1';
+        clone.style.filter = 'none';
+        clone.style.transform = 'none';
+        clone.style.margin = '0';
+        clone.style.animation = 'none';
+        const html = new XMLSerializer().serializeToString(clone);
+        const svg = '<svg xmlns="http://www.w3.org/2000/svg" width="' + w + '" height="' + h + '">'
+          + '<foreignObject x="0" y="0" width="' + w + '" height="' + h + '">'
+          + '<div xmlns="http://www.w3.org/1999/xhtml" style="width:' + w + 'px;height:' + h + 'px;font-family:\'Hanken Grotesk\',system-ui,sans-serif;color:#38312A;">'
+          + html + '</div></foreignObject></svg>';
+        const url = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+        const img = new Image();
+        img.onload = () => {
+          const dpr = Math.min(window.devicePixelRatio || 1, 2);
+          const c = document.createElement('canvas');
+          c.width = w * dpr; c.height = h * dpr;
+          const cx = c.getContext('2d');
+          cx.scale(dpr, dpr);
+          cx.drawImage(img, 0, 0, w, h);
+          resolve({ canvas: c, w: w, h: h, dpr: dpr, left: rect.left, top: rect.top });
+        };
+        img.onerror = reject;
+        img.src = url;
+      } catch (e) { reject(e); }
+    });
+  }
+
+  runShatter(cap, onReady, done) {
+    const cv = this.canvasRef.current;
+    if (!cv) { if (onReady) onReady(); done(); return; }
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const W = window.innerWidth, H = window.innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    cv.style.width = W + 'px'; cv.style.height = H + 'px';
+    const ctx = cv.getContext('2d');
+    ctx.scale(dpr, dpr);
+    const src = cap.canvas, sdpr = cap.dpr, ox = cap.left, oy = cap.top;
+    let tile = 15;
+    while (Math.ceil(cap.w / tile) * Math.ceil(cap.h / tile) > 1300) tile += 2;
+    const cols = Math.ceil(cap.w / tile), rows = Math.ceil(cap.h / tile);
+    const tiles = [];
+    for (let r = 0; r < rows; r++) {
+      for (let c = 0; c < cols; c++) {
+        const fx = c / Math.max(cols - 1, 1);
+        const fy = r / Math.max(rows - 1, 1);
+        const hx = ox + c * tile, hy = oy + r * tile;
+        tiles.push({
+          hx: hx, hy: hy, cx: hx, cy: hy,
+          sx: c * tile * sdpr, sy: r * tile * sdpr, ss: tile * sdpr,
+          delay: fx * 380 + fy * 80 + Math.random() * 150,
+          vx: 2.3 + Math.random() * 3.0,
+          vy: -(0.1 + Math.random() * 1.0) - fy * 0.5,
+          ax: 0.07 + Math.random() * 0.07,
+          swayAmp: 5 + Math.random() * 14,
+          swayFreq: 0.004 + Math.random() * 0.008,
+          phase: Math.random() * 6.283,
+          rot: 0, vrot: (Math.random() - 0.5) * 0.15,
+          flight: 800 + Math.random() * 560,
+        });
+      }
+    }
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      if (this._raf) cancelAnimationFrame(this._raf);
+      if (this._safety) clearTimeout(this._safety);
+      ctx.clearRect(0, 0, W, H);
+      done();
+    };
+    const half = tile / 2;
+    // paint the intact pixel copy first, then hand off (hide the live screen)
+    ctx.clearRect(0, 0, W, H);
+    for (const s of tiles) {
+      ctx.drawImage(src, s.sx, s.sy, s.ss, s.ss, s.cx, s.cy, tile, tile);
+    }
+    if (onReady) onReady();
+    const start = performance.now();
+    const loop = (now) => {
+      const t = now - start;
+      ctx.clearRect(0, 0, W, H);
+      let alive = 0;
+      for (const s of tiles) {
+        const lt = t - s.delay;
+        if (lt < 0) {
+          ctx.globalAlpha = 1;
+          ctx.drawImage(src, s.sx, s.sy, s.ss, s.ss, s.cx, s.cy, tile, tile);
+          alive++;
+        } else {
+          const p = lt / s.flight;
+          if (p >= 1) continue;
+          s.vx += s.ax;
+          s.cx += s.vx;
+          s.cy += s.vy;
+          s.rot += s.vrot;
+          const sway = Math.sin(now * s.swayFreq + s.phase) * s.swayAmp * (0.4 + p);
+          const a = p < 0.35 ? 1 : Math.max(0, 1 - (p - 0.35) / 0.65);
+          ctx.save();
+          ctx.globalAlpha = a;
+          ctx.translate(s.cx + half, s.cy + sway + half);
+          ctx.rotate(s.rot);
+          ctx.drawImage(src, s.sx, s.sy, s.ss, s.ss, -half, -half, tile, tile);
+          ctx.restore();
+          alive++;
+        }
+      }
+      if (t < 2600 && alive > 0) { this._raf = requestAnimationFrame(loop); }
+      else { finish(); }
+    };
+    this._raf = requestAnimationFrame(loop);
+    this._safety = setTimeout(finish, 3000);
+  }
+
+  dotStyle(filled, color) {
+    return {
+      width: '22px', height: '22px', borderRadius: '50%', padding: 0, cursor: 'pointer',
+      border: '1.5px solid ' + (filled ? color : '#E2D3BB'),
+      background: filled ? color : 'transparent',
+      transition: 'all .15s ease',
+    };
+  }
+
+  toggleStyle(on) { const pal = this.palette(); return { width: '44px', height: '26px', borderRadius: '40px', flex: 'none', cursor: 'pointer', padding: '3px', background: on ? pal.c : '#E2D3BB', display: 'flex', justifyContent: on ? 'flex-end' : 'flex-start', alignItems: 'center', transition: 'all .18s ease' }; }
+  knobStyle() { return { width: '20px', height: '20px', borderRadius: '50%', background: '#FFFDF9', boxShadow: '0 1px 3px rgba(80,50,20,.25)' }; }
+
+  isPremiumNow() { return !!(this.state.settings && this.state.settings.isPremium) || this.props.demoPremium === 'Unlocked'; }
+  portalUrl = 'https://billing.stripe.com/p/login/test_REPLACE_WITH_YOUR_LINK';
+
+  goSettings() { this.setState({ screen: 'settings', confirmDelete: false }); }
+  doInstall() {
+    const p = window.__exhaleDeferredPrompt;
+    if (!p) return;
+    p.prompt();
+    if (p.userChoice && p.userChoice.then) {
+      p.userChoice.then(() => { window.__exhaleDeferredPrompt = null; this.setState({ installCanPrompt: false }); });
+    }
+  }
+  persistSettings(patch) { const settings = Object.assign({}, this.state.settings, patch); this.saveSettings(settings); this.setState({ settings }); }
+  setSettingDay(day) { this.persistSettings({ closeDay: day }); }
+  setCadence(c) { this.persistSettings({ cadence: c }); }
+  setAccent(name) { this.persistSettings({ accent: name }); }
+  toggleReminder(key) { const r = Object.assign({ weeklyClose: true, review: true }, this.state.settings.reminders || {}); r[key] = !r[key]; this.persistSettings({ reminders: r }); }
+  openPortal() { try { window.open(this.portalUrl, '_blank', 'noopener'); } catch (e) {} }
+
+  onSettingsDragOver(key, e) {
+    if (e && e.preventDefault) e.preventDefault();
+    const dk = this.state.sDragKey; if (!dk || dk === key) return;
+    this.setState(s => { const order = s.settings.areaOrder.slice(); const from = order.indexOf(dk), to = order.indexOf(key); if (from < 0 || to < 0) return {}; order.splice(from, 1); order.splice(to, 0, dk); return { settings: { ...s.settings, areaOrder: order } }; });
+  }
+  onSettingsDrop() { this.saveSettings(this.state.settings); this.setState({ sDragKey: null }); }
+
+  goAuth() { this.setState({ screen: 'auth', authEmail: this.state.settings.email || '' }); }
+  setAuthEmail(v) { this.setState({ authEmail: v }); }
+  sendMagicLink() { if (!/.+@.+\..+/.test(this.state.authEmail || '')) return; this.setState({ screen: 'authSent' }); }
+  confirmSignIn() { this.persistSettings({ email: this.state.authEmail, signedIn: true }); this.setState({ screen: 'settings' }); }
+  signOut() { this.persistSettings({ signedIn: false }); }
+
+  exportData() {
+    try {
+      const data = { entries: this.state.entries, reviews: this.state.reviews, settings: this.state.settings, exportedAt: new Date().toISOString() };
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'exhale-export.json'; document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(() => URL.revokeObjectURL(url), 1500);
+    } catch (e) {}
+  }
+  requestDelete() { this.setState({ confirmDelete: true }); }
+  cancelDelete() { this.setState({ confirmDelete: false }); }
+  doDelete() {
+    try { localStorage.setItem('exhale_entries_v1', '[]'); localStorage.setItem('exhale_reviews_v1', '[]'); } catch (e) {}
+    const settings = this.defaultSettings();
+    this.saveSettings(settings);
+    this.setState({ entries: [], reviews: [], settings, confirmDelete: false, screen: 'onboarding', step: 0, draft: this.blankDraft(), onb: { day: settings.closeDay, order: settings.areaOrder.slice() } });
+  }
+
+  goReviews() { this.setState({ screen: 'reviews' }); }
+  openReviewDetail(id) { this.setState({ screen: 'reviewDetail', viewReviewId: id }); }
+
+  renderVals() {
+    const s = this.state;
+    const pal = this.palette();
+    const isPremium = s.settings.isPremium || this.props.demoPremium === 'Unlocked';
+    const planCardStyle = sel => ({ flex: 1, textAlign: 'left', cursor: 'pointer', borderRadius: '16px', padding: '16px 15px 14px', border: '2px solid ' + (sel ? pal.c : '#E7DAC6'), background: sel ? pal.bg : '#FCF8F1', transition: 'all .15s ease', position: 'relative' });
+    const radioStyle = sel => ({ width: '18px', height: '18px', borderRadius: '50%', flex: 'none', border: '2px solid ' + (sel ? pal.c : '#D9C8AE'), background: sel ? pal.c : 'transparent', boxShadow: sel ? 'inset 0 0 0 2.5px #FCF8F1' : 'none', transition: 'all .15s ease' });
+    const meta = this.areaMeta;
+    const ritualSteps = this.ritualSteps();
+    const stepKey = ritualSteps[s.step];
+    const activeGoals = this.activeGoals();
+
+    const areaRows = meta.map(a => {
+      const v = s.draft.areas[a.key];
+      return {
+        key: a.key, label: a.label,
+        dotStyle: { width: '11px', height: '11px', borderRadius: '50%', background: a.color },
+        effortDots: [1,2,3,4,5].map(n => ({ key: a.key+'e'+n, style: this.dotStyle(n <= v.e, pal.c), set: () => this.setArea(a.key,'e',n) })),
+        outcomeDots: [1,2,3,4,5].map(n => ({ key: a.key+'o'+n, style: this.dotStyle(n <= v.o, '#7E8E6E'), set: () => this.setArea(a.key,'o',n) })),
+      };
+    });
+
+    const satisfactionDots = [1,2,3,4,5].map(n => ({ key: 'sat'+n, style: this.dotStyle(n <= (s.draft.satisfaction || 0), pal.c), set: () => this.setSatisfaction(n) }));
+
+    const entriesView = s.entries.map(e => {
+      const winN = (e.wins || []).length;
+      return {
+        key: e.id, id: e.id,
+        dateLabel: this.fmt(e.date, { weekday: 'short', month: 'short', day: 'numeric' }),
+        topWin: this.weekLabel(e),
+        metaLabel: (winN === 1 ? '1 win' : winN + ' wins') + (e.courage ? ' · ' + e.courage : ''),
+        open: () => this.setState({ screen: 'entry', viewId: e.id }),
+        dots: meta.map(a => ({ key: a.key, style: { width: '9px', height: '9px', borderRadius: '50%', background: a.color, opacity: 0.22 + 0.156 * (e.areas[a.key].o || 0) } })),
+      };
+    });
+
+    const cur = s.entries.find(e => e.id === s.viewId) || null;
+    let entryDate = '', entryHighlight = '', entryWins = [], entryDifferently = '', entryCourage = '', plotDots = [];
+    let entryHasWins = false, entryHasHighlight = false, entryHasDifferently = false, entryHasCourage = false;
+    if (cur) {
+      entryDate = this.fmtUK(cur.date);
+      entryHighlight = (cur.highlight || '').trim();
+      entryHasHighlight = !!entryHighlight;
+      entryWins = (cur.wins || []).map((w, i) => ({ key: i, text: w }));
+      entryDifferently = cur.differently || '';
+      entryCourage = cur.courage || '';
+      entryHasWins = entryWins.length > 0;
+      entryHasDifferently = !!entryDifferently;
+      entryHasCourage = !!entryCourage;
+      plotDots = meta.map(a => {
+        const v = cur.areas[a.key];
+        return {
+          key: a.key, label: a.label,
+          wrapStyle: { position: 'absolute', left: (8 + v.o / 5 * 84) + '%', top: (8 + (5 - v.e) / 5 * 84) + '%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' },
+          dotStyle: { width: '16px', height: '16px', borderRadius: '50%', background: a.color, border: '2.5px solid #FCF8F1', boxShadow: '0 3px 9px rgba(80,50,20,.22)' },
+          legendStyle: { width: '10px', height: '10px', borderRadius: '50%', background: a.color, flex: 'none' },
+        };
+      });
+    }
+
+    // ---- insights (AI-free: derived from ratings + the user's own words) ----
+    const sorted = [...s.entries].sort((a, b) => a.date < b.date ? -1 : 1);
+    const wn = sorted.length;
+    const satEntries = sorted.filter(e => (e.satisfaction || 0) > 0);
+    const avg = arr => arr.reduce((x, y) => x + y, 0) / Math.max(arr.length, 1);
+    const cdot = col => ({ width: '10px', height: '10px', borderRadius: '50%', background: col, marginTop: '5px', flex: 'none' });
+    const areaAgg = meta.map(a => {
+      const ae = avg(sorted.map(e => e.areas[a.key].e));
+      const ao = avg(sorted.map(e => e.areas[a.key].o));
+      return { key: a.key, label: a.label, color: a.color, ae, ao, gap: ae - ao };
+    });
+    const aggPlotDots = areaAgg.map(a => ({
+      key: a.key, label: a.label,
+      wrapStyle: { position: 'absolute', left: (8 + a.ao / 5 * 84) + '%', top: (8 + (5 - a.ae) / 5 * 84) + '%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' },
+      dotStyle: { width: '15px', height: '15px', borderRadius: '50%', background: a.color, border: '2.5px solid #FCF8F1', boxShadow: '0 3px 9px rgba(80,50,20,.22)' },
+      legendStyle: { width: '10px', height: '10px', borderRadius: '50%', background: a.color, flex: 'none' },
+    }));
+    const callouts = [];
+    if (wn >= 1 && areaAgg.length) {
+      const best = [...areaAgg].sort((a, b) => b.ao - a.ao)[0];
+      const grind = [...areaAgg].sort((a, b) => b.gap - a.gap)[0];
+      const flow = [...areaAgg].sort((a, b) => a.gap - b.gap)[0];
+      if (best) callouts.push({ key: 'best', label: best.label, color: best.color, text: 'where your effort pays off most.', dotStyle: cdot(best.color) });
+      if (grind && grind.gap >= 0.8 && grind.key !== best.key) callouts.push({ key: 'grind', label: grind.label, color: grind.color, text: 'real effort going in \u2014 the outcome hasn\u2019t caught up yet.', dotStyle: cdot(grind.color) });
+      if (flow && (flow.ao - flow.ae) >= 0.8 && flow.key !== best.key) callouts.push({ key: 'flow', label: flow.label, color: flow.color, text: 'gives back more than it asks of you.', dotStyle: cdot(flow.color) });
+    }
+    const spark = (vals, h, pad) => vals.map((v, i) => {
+      const x = vals.length <= 1 ? 50 : (i / (vals.length - 1)) * 100;
+      const y = h - pad - (v / 5) * (h - 2 * pad);
+      return x.toFixed(1) + ',' + y.toFixed(1);
+    }).join(' ');
+    const areaTrends = meta.map(a => {
+      const o = sorted.map(e => e.areas[a.key].o);
+      const ef = sorted.map(e => e.areas[a.key].e);
+      const latest = o[o.length - 1], prev = o.length >= 2 ? o[o.length - 2] : latest;
+      const dir = latest > prev ? 'up' : latest < prev ? 'down' : 'flat';
+      return {
+        key: a.key, label: a.label, strokeColor: a.color,
+        ePts: spark(ef, 36, 4), oPts: spark(o, 36, 4),
+        latestOutcome: latest,
+        arrow: dir === 'up' ? '\u2197' : dir === 'down' ? '\u2198' : '\u2192',
+        arrowStyle: { fontSize: '14px', fontWeight: 700, color: dir === 'up' ? '#6F8161' : dir === 'down' ? '#C0683F' : '#9A8C78' },
+        dotStyle: { width: '9px', height: '9px', borderRadius: '50%', background: a.color, flex: 'none' },
+      };
+    });
+    const bestWeeks = satEntries
+      .slice()
+      .sort((a, b) => b.satisfaction - a.satisfaction)
+      .slice(0, 2)
+      .map(e => ({
+        key: e.id, id: e.id,
+        dateLabel: this.fmtUK(e.date),
+        win: this.weekLabel(e),
+        score: e.satisfaction,
+        courage: e.courage || '', hasCourage: !!e.courage,
+        open: () => this.setState({ screen: 'entry', viewId: e.id }),
+      }));
+    const hasBestWeeks = bestWeeks.length > 0;
+    const insightsSubtitle = wn >= 1
+      ? ('Across ' + wn + (wn === 1 ? ' week' : ' weeks') + ', ' + this.fmt(sorted[0].date, { month: 'short', day: 'numeric' }) + ' \u2013 ' + this.fmt(sorted[wn - 1].date, { month: 'short', day: 'numeric' }) + '.')
+      : '';
+
+    // ---- overall satisfaction trend (the headline signal) ----
+    const hasSatisfaction = satEntries.length >= 2;
+    let satAvgLabel = '', satLatest = 0, satPts = '', satArrow = '\u2192', satArrowStyle = {}, satDirWord = '';
+    if (satEntries.length) {
+      const sv = satEntries.map(e => e.satisfaction);
+      const satAvg = avg(sv); satLatest = sv[sv.length - 1];
+      satAvgLabel = satAvg.toFixed(1);
+      satPts = spark(sv, 40, 5);
+      const prev = sv.length >= 2 ? sv[sv.length - 2] : satLatest;
+      const dir = satLatest > prev ? 'up' : satLatest < prev ? 'down' : 'flat';
+      satArrow = dir === 'up' ? '\u2197' : dir === 'down' ? '\u2198' : '\u2192';
+      satArrowStyle = { fontSize: '20px', fontWeight: 700, color: dir === 'up' ? '#6F8161' : dir === 'down' ? '#C0683F' : '#9A8C78' };
+      satDirWord = dir === 'up' ? 'trending up' : dir === 'down' ? 'easing down' : 'holding steady';
+    }
+
+    // ---- review session derived data ----
+    const rd = s.reviewDraft;
+    const rSteps = this.reviewSteps();
+    const rKey = rd ? rSteps[s.reviewStep] : null;
+    let reviewPeriodLabel = '', lookbackStrong = [], lookbackTough = null, reviewScatter = [], reviewLegend = [], reviewDigNote = '';
+    if (rd) {
+      reviewPeriodLabel = this.fmt(rd.periodStart, { month: 'short', day: 'numeric' }) + ' \u2013 ' + this.fmt(rd.periodEnd, { month: 'short', day: 'numeric', year: 'numeric' });
+      const pe = sorted.filter(e => e.date >= rd.periodStart);
+      reviewDigNote = (s.digMetric === 'satisfaction' && pe.filter(e => (e.satisfaction || 0) > 0).length === 0) ? 'No overall-satisfaction ratings in this period yet — they’ll fill in as you close new weeks. Switch to Outcome or Effort to rank these weeks now.' : '';
+      const subKey = s.digMetric === 'effort' ? 'e' : 'o';
+      const scoreOf = e => s.digMetric === 'satisfaction' ? (e.satisfaction || 0) : (s.digArea === 'all' ? avg(meta.map(m => e.areas[m.key][subKey])) : e.areas[s.digArea][subKey]);
+      const ranked = pe.map(e => ({ e: e, sc: scoreOf(e) })).sort((a, b) => b.sc - a.sc);
+      const mk = e => { const sc = scoreOf(e) || 0; return { key: e.id, dateLabel: this.fmt(e.date, { weekday: 'short', month: 'short', day: 'numeric' }), win: this.weekLabel(e), score: (s.digMetric === 'satisfaction' && sc <= 0) ? '—' : sc.toFixed(1), open: () => this.setState({ screen: 'entry', viewId: e.id }) }; };
+      lookbackStrong = ranked.slice(0, 3).map(x => mk(x.e));
+      lookbackTough = ranked.length ? mk(ranked[ranked.length - 1].e) : null;
+      const halfI = Math.floor(pe.length / 2);
+      reviewScatter = meta.map(a => {
+        const ae = avg(pe.map(e => e.areas[a.key].e)), ao = avg(pe.map(e => e.areas[a.key].o));
+        return { key: a.key, wrapStyle: { position: 'absolute', left: (8 + ao / 5 * 84) + '%', top: (8 + (5 - ae) / 5 * 84) + '%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' }, dotStyle: { width: '15px', height: '15px', borderRadius: '50%', background: a.color, border: '2.5px solid #FCF8F1', boxShadow: '0 3px 9px rgba(80,50,20,.22)' } };
+      });
+      reviewLegend = meta.map(a => {
+        const fh = pe.slice(0, halfI || 1).map(e => e.areas[a.key].o);
+        const sh = pe.slice(halfI).map(e => e.areas[a.key].o);
+        const dd = avg(sh) - avg(fh);
+        const dir = dd > 0.3 ? 'up' : dd < -0.3 ? 'down' : 'flat';
+        return { key: a.key, label: a.label, legendStyle: { width: '10px', height: '10px', borderRadius: '50%', background: a.color, flex: 'none' }, arrow: dir === 'up' ? '\u2197' : dir === 'down' ? '\u2198' : '\u2192', arrowStyle: { fontSize: '13px', fontWeight: 700, color: dir === 'up' ? '#6F8161' : dir === 'down' ? '#C0683F' : '#9A8C78' } };
+      });
+    }
+    const cadW = this.cadenceWeeks();
+    let reviewDue = false;
+    if (s.entries.length >= 2) {
+      const last = s.settings.lastReviewDate;
+      if (!last) reviewDue = true;
+      else reviewDue = (Date.now() - new Date(last + 'T00:00:00').getTime()) / (864e5 * 7) >= cadW;
+    }
+    const cadenceWord = s.settings.cadence === 'monthly' ? 'monthly' : (s.settings.cadence === '4weeks' ? '4-week' : 'quarterly');
+
+    const count = s.entries.length;
+
+    // ---- settings, account, reminders, appearance, data ----
+    const settingsDayOptions = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(d => ({ key: d, label: d.slice(0, 3), choose: () => this.setSettingDay(d), style: this.dayStyle(d === s.settings.closeDay) }));
+    const settingsAreaView = (s.settings.areaOrder || []).map((k, i) => ({ key: k, rank: i + 1, label: this.areaLabel(k), dotStyle: { width: '10px', height: '10px', borderRadius: '50%', background: this.areaColor(k), flex: 'none' }, rowStyle: { display: 'flex', alignItems: 'center', gap: '12px', background: '#FBF6EE', border: '1.5px solid ' + (s.sDragKey === k ? pal.c : '#EFE4D2'), borderRadius: '12px', padding: '11px 14px', cursor: 'grab', opacity: s.sDragKey === k ? 0.5 : 1, transition: 'border-color .15s ease, opacity .15s ease' }, onDragStart: () => this.setState({ sDragKey: k }), onDragOver: (e) => this.onSettingsDragOver(k, e), onDrop: () => this.onSettingsDrop(), onDragEnd: () => this.onSettingsDrop() }));
+    const cadenceOptions = [{ key: 'monthly', label: 'Monthly' }, { key: 'quarterly', label: 'Quarterly' }].map(o => ({ key: o.key, label: o.label, choose: () => this.setCadence(o.key), style: this.pillStyle(s.settings.cadence === o.key) }));
+    const rem = Object.assign({ weeklyClose: true, review: true }, s.settings.reminders || {});
+    const accentColors = { Abundate: '#2C7D63', Clay: '#C0683F', Sage: '#6F8161', Plum: '#94688A' };
+    const curAccent = (s.settings.accent || this.props.accent);
+    const accentSwatches = ['Abundate', 'Clay', 'Sage', 'Plum'].map(name => { const pp = accentColors[name]; const selA = curAccent === name; return { key: name, label: name, choose: () => this.setAccent(name), swatchStyle: { width: '26px', height: '26px', borderRadius: '50%', background: pp, flex: 'none', boxShadow: selA ? '0 0 0 3px #FCF8F1, 0 0 0 4.5px ' + pp : 'none' }, style: { display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 14px 9px 10px', borderRadius: '40px', cursor: 'pointer', border: '1.5px solid ' + (selA ? pp : '#E7DAC6'), background: '#FCF8F1', fontSize: '14px', fontWeight: 600, color: selA ? '#4A4136' : '#8A7E6C', transition: 'all .15s ease' } }; });
+
+    // ---- past reviews ----
+    const reviewsView = s.reviews.map(r => ({ key: r.id, id: r.id, dateLabel: this.fmtUK(r.date), periodLabel: this.fmt(r.periodStart, { month: 'short', day: 'numeric' }) + ' \u2013 ' + this.fmt(r.periodEnd, { month: 'short', day: 'numeric' }), ratingLabel: (r.rating || 0) + '/5', goalsLabel: ((r.goals || []).length) + ((r.goals || []).length === 1 ? ' intention' : ' intentions'), open: () => this.openReviewDetail(r.id) }));
+    const curReview = s.reviews.find(r => r.id === s.viewReviewId) || null;
+    let reviewDetail = null;
+    if (curReview) {
+      reviewDetail = {
+        dateLabel: this.fmtUK(curReview.date),
+        periodLabel: this.fmt(curReview.periodStart, { month: 'long', day: 'numeric' }) + ' \u2013 ' + this.fmt(curReview.periodEnd, { month: 'long', day: 'numeric', year: 'numeric' }),
+        ratingDots: [1, 2, 3, 4, 5].map(n => ({ key: n, style: this.dotStyle(n <= (curReview.rating || 0), pal.c) })),
+        reflection: curReview.reflection || '', hasReflection: !!(curReview.reflection && curReview.reflection.trim()),
+        goals: (curReview.goals || []).map(g => ({ key: g.id, text: g.text, next: g.next || '', hasNext: !!g.next, carried: !!g.carried, notCarried: !g.carried, tags: (g.areas || []).map(k => ({ key: k, label: this.areaLabel(k), style: this.tagStyle(k) })) })),
+        hasGoals: (curReview.goals || []).length > 0,
+      };
+    }
+
+    return {
+      isHome: s.screen === 'home', isRitual: s.screen === 'ritual', isComplete: s.screen === 'complete',
+      isLog: s.screen === 'log', isEntry: s.screen === 'entry',
+      stepWins: s.screen === 'ritual' && stepKey === 'wins',
+      stepHighlight: s.screen === 'ritual' && stepKey === 'highlight',
+      stepFocus: s.screen === 'ritual' && stepKey === 'focus',
+      stepDifferently: s.screen === 'ritual' && stepKey === 'differently',
+      stepCourage: s.screen === 'ritual' && stepKey === 'courage',
+      stepAreas: s.screen === 'ritual' && stepKey === 'areas',
+      stepNumber: s.step + 1,
+      totalSteps: ritualSteps.length,
+      backLabel: s.step === 0 ? 'Close for now' : 'Back',
+      continueLabel: stepKey === 'areas' ? 'Close the week' : 'Continue',
+      progressFillStyle: { width: ((s.step + 1) / ritualSteps.length * 100) + '%', height: '100%', background: pal.c, borderRadius: '40px', transition: 'width .45s cubic-bezier(.4,0,.2,1)' },
+
+      todayLabel: this.fmtUK(new Date()),
+      countLabel: count === 0 ? 'This will be your first close.' : ('You\u2019ve closed ' + count + (count === 1 ? ' week' : ' weeks') + ' \u2014 this is your ' + this.ordinal(count + 1) + '.'),
+
+      winChips: (s.draft.wins || []).map((w, i) => ({ key: i, text: w, editing: s.editingWin === i, notEditing: s.editingWin !== i, edit: () => this.editWin(i), onEdit: e => this.updateWin(i, e.target.value), onEditKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.commitWin(i); } }, commit: () => this.commitWin(i), inputRef: el => { if (el) el.focus(); }, remove: () => this.removeWin(i) })),
+      winInput: s.winInput,
+      draftDifferently: s.draft.differently,
+      draftCourage: s.draft.courage,
+      draftHighlight: s.draft.highlight,
+      areaRows,
+      satisfactionDots,
+
+      hasEntries: count > 0,
+      emptyLog: count === 0,
+      entriesView,
+
+      isInsights: s.screen === 'insights',
+      insightsReady: wn >= 2,
+      goInsights: () => isPremium ? this.setState({ screen: 'insights' }) : this.openPaywall('insights'),
+      insightsSubtitle, aggPlotDots, callouts, areaTrends, bestWeeks,
+      hasBestWeeks, noBestWeeks: !hasBestWeeks,
+      hasSatisfaction, satAvgLabel, satLatest, satPts, satArrow, satArrowStyle, satDirWord,
+      satLineStyle: { stroke: pal.c },
+
+      isOnboarding: s.screen === 'onboarding',
+      dayOptions: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(d => ({ key: d, label: d.slice(0, 3), choose: () => this.setOnbDay(d), style: this.dayStyle(d === s.onb.day) })),
+      areaRankView: s.onb.order.map((k, i) => ({ key: k, rank: i + 1, label: this.areaLabel(k), dotStyle: { width: '10px', height: '10px', borderRadius: '50%', background: this.areaColor(k), flex: 'none' }, rowStyle: { display: 'flex', alignItems: 'center', gap: '12px', background: '#FBF6EE', border: '1.5px solid ' + (s.dragKey === k ? pal.c : '#EFE4D2'), borderRadius: '12px', padding: '11px 14px', cursor: 'grab', opacity: s.dragKey === k ? 0.5 : 1, transition: 'border-color .15s ease, opacity .15s ease' }, onDragStart: () => this.setState({ dragKey: k }), onDragOver: (e) => this.onAreaDragOver(k, e), onDrop: (e) => this.onAreaDrop(e), onDragEnd: () => this.onAreaDragEnd() })),
+      finishOnboarding: () => this.finishOnboarding(),
+
+      reviewDue: reviewDue, cadenceWord: cadenceWord,
+      startReview: () => this.startReview(),
+      gateReview: () => isPremium ? this.startReview() : this.openPaywall('review'),
+      isPremium: isPremium, showPremiumTag: !isPremium,
+      premiumTagStyle: { fontSize: '10.5px', fontWeight: 700, letterSpacing: '.08em', textTransform: 'uppercase', color: pal.c, background: '#FFFFFF', border: '1px solid ' + pal.c + '55', borderRadius: '20px', padding: '3px 9px', whiteSpace: 'nowrap' },
+      isPaywall: s.screen === 'paywall', isPaySuccess: s.screen === 'paySuccess',
+      planYearly: s.planChoice === 'yearly', planMonthly: s.planChoice === 'monthly',
+      yearlyCardStyle: planCardStyle(s.planChoice === 'yearly'), monthlyCardStyle: planCardStyle(s.planChoice === 'monthly'),
+      yearlyRadioStyle: radioStyle(s.planChoice === 'yearly'), monthlyRadioStyle: radioStyle(s.planChoice === 'monthly'),
+      chooseYearly: () => this.choosePlan('yearly'), chooseMonthly: () => this.choosePlan('monthly'),
+      purchase: () => this.purchase(),
+      purchaseNote: s.planChoice === 'yearly' ? 'Then \u00a342 per year. Cancel anytime.' : 'Then \u00a35 per month. Cancel anytime.',
+      finishPay: () => this.finishPay(),
+      closePaywall: () => this.setState({ screen: s.payIntent === 'review' ? 'home' : 'log' }),
+      payBtnStyle: { background: pal.c, color: '#FFF9F0', border: 'none', padding: '15px 30px', borderRadius: '40px', fontFamily: 'inherit', fontSize: '16px', fontWeight: 600, letterSpacing: '.01em', cursor: 'pointer', boxShadow: '0 10px 26px rgba(120,70,30,.18)', transition: 'all .2s ease', width: '100%' },
+      payFeatures: [
+        { key: 'patterns', title: 'Patterns across your weeks', text: 'Watch effort, outcome and satisfaction move over time.' },
+        { key: 'review', title: 'The ' + cadenceWord + ' review', text: 'A deeper ritual: look back, retire what\u2019s done, set new intentions.' },
+        { key: 'focus', title: 'Goal-linked focus', text: 'Your intentions meet you gently inside each weekly close.' },
+      ].map(f => ({ key: f.key, title: f.title, text: f.text, dotStyle: { width: '9px', height: '9px', borderRadius: '50%', background: pal.c, marginTop: '7px', flex: 'none' } })),
+
+      // ---- settings screen ----
+      isSettings: s.screen === 'settings',
+      goSettings: () => this.goSettings(),
+      accentBtnStyle: { background: pal.c, color: '#FFF9F0', border: 'none', padding: '11px 20px', borderRadius: '30px', fontFamily: 'inherit', fontSize: '14.5px', fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap', transition: 'all .2s ease' },
+      settingsDayOptions, settingsAreaView, cadenceOptions, accentSwatches,
+      remWeekly: rem.weeklyClose, remReview: rem.review,
+      toggleRemWeekly: () => this.toggleReminder('weeklyClose'),
+      toggleRemReview: () => this.toggleReminder('review'),
+      remWeeklyStyle: this.toggleStyle(rem.weeklyClose), remWeeklyKnob: this.knobStyle(),
+      remReviewStyle: this.toggleStyle(rem.review), remReviewKnob: this.knobStyle(),
+      closeDayLabel: s.settings.closeDay,
+      signedIn: !!s.settings.signedIn, signedOut: !s.settings.signedIn, accountEmail: s.settings.email || '',
+      goAuth: () => this.goAuth(), signOut: () => this.signOut(),
+      planLabel: isPremium ? ('Exhale Premium \u00b7 ' + ((s.settings.plan || 'yearly') === 'yearly' ? 'Yearly' : 'Monthly')) : 'Exhale Free',
+      upgradeFromSettings: () => this.openPaywall('settings'),
+      openPortal: () => this.openPortal(),
+      exportData: () => this.exportData(),
+      isInstallBanner: !s.installStandalone && !s.installDismissed && (s.installCanPrompt || s.installIsIOS) && s.screen === 'home',
+      installIOS: !!s.installIsIOS,
+      installAndroid: !!s.installCanPrompt && !s.installIsIOS,
+      doInstall: () => this.doInstall(),
+      dismissInstall: () => { try { localStorage.setItem('exhale_install_dismissed_v1', '1'); } catch (e) {} this.setState({ installDismissed: true }); },
+      requestDelete: () => this.requestDelete(), cancelDelete: () => this.cancelDelete(), doDelete: () => this.doDelete(),
+      confirmDelete: s.confirmDelete, notConfirmDelete: !s.confirmDelete,
+
+      // ---- auth screens ----
+      isAuth: s.screen === 'auth', isAuthSent: s.screen === 'authSent',
+      authEmail: s.authEmail,
+      onAuthEmail: e => this.setAuthEmail(e.target.value),
+      onAuthKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.sendMagicLink(); } },
+      sendMagicLink: () => this.sendMagicLink(),
+      confirmSignIn: () => this.confirmSignIn(),
+
+      // ---- past reviews ----
+      isReviews: s.screen === 'reviews', isReviewDetail: s.screen === 'reviewDetail',
+      goReviews: () => this.goReviews(),
+      reviewsView, hasReviews: s.reviews.length > 0, noReviews: s.reviews.length === 0,
+      reviewDetail,
+      isReview: s.screen === 'review',
+      isReviewComplete: s.screen === 'reviewComplete',
+      rStepIntro: s.screen === 'review' && rKey === 'intro',
+      rStepLookback: s.screen === 'review' && rKey === 'lookback',
+      rStepTrends: s.screen === 'review' && rKey === 'trends',
+      rStepRate: s.screen === 'review' && rKey === 'rate',
+      rStepReflect: s.screen === 'review' && rKey === 'reflect',
+      rStepCarry: s.screen === 'review' && rKey === 'carry',
+      rStepGoals: s.screen === 'review' && rKey === 'goals',
+      reviewStepNumber: s.reviewStep + 1,
+      reviewTotal: rSteps.length,
+      reviewProgressStyle: { width: ((s.reviewStep + 1) / rSteps.length * 100) + '%', height: '100%', background: pal.c, borderRadius: '40px', transition: 'width .45s cubic-bezier(.4,0,.2,1)' },
+      reviewBackLabel: s.reviewStep === 0 ? 'Not now' : 'Back',
+      reviewContinueLabel: rKey === 'goals' ? 'Complete review' : (rKey === 'intro' ? 'Begin the review' : 'Continue'),
+      reviewNext: () => this.reviewNext(),
+      reviewBack: () => this.reviewBack(),
+      reviewPeriodLabel: reviewPeriodLabel,
+      digMetricOptions: ['satisfaction', 'outcome', 'effort'].map(m => ({ key: m, label: m.charAt(0).toUpperCase() + m.slice(1), choose: () => this.setDig(m, null), style: this.pillStyle(s.digMetric === m) })),
+      digAreaApplies: s.digMetric !== 'satisfaction',
+      digAreaOptions: [{ key: 'all', label: 'All areas' }].concat(meta.map(a => ({ key: a.key, label: a.label }))).map(o => ({ key: o.key, label: o.label, choose: () => this.setDig(null, o.key), style: this.pillStyle(s.digArea === o.key) })),
+      lookbackStrong: lookbackStrong, lookbackTough: lookbackTough, hasTough: !!lookbackTough,
+      reviewDigNote: reviewDigNote, hasDigNote: !!reviewDigNote,
+      reviewScatter: reviewScatter, reviewLegend: reviewLegend,
+      reviewRatingDots: [1, 2, 3, 4, 5].map(n => ({ key: n, style: this.dotStyle(!!rd && n <= rd.rating, pal.c), set: () => this.setReviewRating(n) })),
+      reviewReflection: rd ? rd.reflection : '',
+      onReflection: e => { const v = e.target.value; this.setReflection(v); },
+      carryGoals: this.activeGoals().map(g => ({ key: g.id, text: g.text, tags: (g.areas || []).map(k => ({ key: k, label: this.areaLabel(k), style: this.tagStyle(k) })), keep: () => this.setCarry(g.id, 'keep'), retire: () => this.setCarry(g.id, 'retire'), keepStyle: this.pillStyle(!!rd && rd.carry[g.id] === 'keep'), retireStyle: this.pillStyle(!!rd && rd.carry[g.id] === 'retire') })),
+      draftGoals: rd ? rd.goals.map(g => ({ key: g.id, text: g.text, next: g.next, hasNext: !!g.next, tags: (g.areas || []).map(k => ({ key: k, label: this.areaLabel(k), style: this.tagStyle(k) })), remove: () => this.removeGoal(g.id) })) : [],
+      newGoalText: s.newGoal.text, newGoalNext: s.newGoal.next,
+      onNewGoalText: e => { const v = e.target.value; this.setNewGoal('text', v); },
+      onNewGoalNext: e => { const v = e.target.value; this.setNewGoal('next', v); },
+      goalAreaToggles: meta.map(a => ({ key: a.key, label: a.label, toggle: () => this.toggleGoalArea(a.key), style: this.tagToggleStyle(s.newGoal.areas.indexOf(a.key) >= 0, a.color) })),
+      addGoal: () => this.addGoal(), canAddGoal: !!s.newGoal.text.trim(),
+      reviewCompleteGoals: (s.reviews[0] && s.reviews[0].goals) ? s.reviews[0].goals.map(g => ({ key: g.id, text: g.text, next: g.next, hasNext: !!g.next })) : [],
+      hasReviewGoals: !!(s.reviews[0] && s.reviews[0].goals && s.reviews[0].goals.length),
+      activeGoalsView: activeGoals.map(g => ({ key: g.id, text: g.text, tags: (g.areas || []).map(k => ({ key: k, label: this.areaLabel(k), style: this.tagStyle(k) })) })),
+      draftGoalNote: s.draft.goalNote || '',
+      onGoalNote: e => { const v = e.target.value; this.setState(st => ({ draft: { ...st.draft, goalNote: v } })); },
+
+      entryDate, entryHighlight, entryWins, entryDifferently, entryCourage, plotDots,
+      entryHasWins, entryHasHighlight, entryNoHighlight: !entryHasHighlight, entryHasDifferently, entryHasCourage,
+      checkStyle: { width: '8px', height: '8px', borderRadius: '50%', background: pal.c, marginTop: '8px', flex: 'none' },
+
+      orbStyle: { width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', background: 'radial-gradient(circle at 38% 33%, ' + pal.soft + ' 0%, ' + pal.c + ' 62%, ' + pal.c + ' 100%)', animation: 'breathe 7s ease-in-out infinite', boxShadow: '0 24px 60px rgba(120,70,30,.18)' },
+      ringStyle: { width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', border: '1.5px solid ' + pal.c, animation: 'ring 7s ease-in-out infinite' },
+      brandDotStyle: { width: '11px', height: '11px', borderRadius: '50%', background: pal.c },
+      primaryBtnStyle: { background: pal.c, color: '#FFF9F0', border: 'none', padding: '15px 30px', borderRadius: '40px', fontFamily: 'inherit', fontSize: '16px', fontWeight: 600, letterSpacing: '.01em', cursor: 'pointer', boxShadow: '0 10px 26px rgba(120,70,30,.18)', transition: 'all .2s ease' },
+
+      dissolving: s.dissolving,
+      canvasRef: this.canvasRef,
+      mainRef: this.mainRef,
+      replay: () => this.replay(),
+
+      begin: () => this.begin(),
+      next: () => this.next(),
+      back: () => this.back(),
+      goHome: () => this.setState({ screen: 'home' }),
+      goLog: () => this.setState({ screen: 'log' }),
+      seeThisWeek: () => this.setState({ screen: 'entry' }),
+      addWin: () => this.addWin(),
+      onWinInput: e => this.setState({ winInput: e.target.value }),
+      onWinKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.addWin(); } },
+      onDifferently: e => { const v = e.target.value; this.setState(st => ({ draft: { ...st.draft, differently: v } })); },
+      onHighlight: e => { const v = e.target.value; this.setState(st => ({ draft: { ...st.draft, highlight: v } })); },
+      onCourage: e => { const v = e.target.value; this.setState(st => ({ draft: { ...st.draft, courage: v } })); },
+    };
+  }
+}
+</script>
+</body>
+</html>
