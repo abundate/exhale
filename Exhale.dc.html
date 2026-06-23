@@ -98,31 +98,13 @@
       <div data-screen-label="Onboarding" style="max-width:540px;width:100%;padding:20px 14px 0;animation:fadeUp .6s ease both;">
         <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Welcome to Exhale</p>
         <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:36px;line-height:1.1;letter-spacing:-.01em;margin:0 0 14px;">A calmer way to close your week.</h1>
-        <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 30px;">Two quick things to set up — then you're ready for your first close.</p>
+        <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 30px;">One quick thing to set up — then you're ready for your first close.</p>
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px;margin-bottom:16px;">
           <h3 style="font-size:17px;font-weight:600;color:#4A4136;margin:0 0 5px;">Which day do you close your week?</h3>
           <p style="font-size:14px;color:#9A8C78;margin:0 0 14px;">Pick the day your working week winds down.</p>
           <div style="display:flex;gap:6px;">
             <sc-for list="{{ dayOptions }}" as="d" hint-placeholder-count="7">
               <div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div>
-            </sc-for>
-          </div>
-        </div>
-        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px;margin-bottom:24px;">
-          <h3 style="font-size:17px;font-weight:600;color:#4A4136;margin:0 0 5px;">What matters most right now?</h3>
-          <p style="font-size:14px;color:#9A8C78;margin:0 0 14px;">Order your five areas by priority. You can change this anytime.</p>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <sc-for list="{{ areaRankView }}" as="a" hint-placeholder-count="5">
-              <div draggable="true" onDragStart="{{ a.onDragStart }}" onDragOver="{{ a.onDragOver }}" onDrop="{{ a.onDrop }}" onDragEnd="{{ a.onDragEnd }}" style="{{ a.rowStyle }}">
-                <span style="font-size:14px;font-weight:700;color:#B7A589;width:16px;">{{ a.rank }}</span>
-                <div style="{{ a.dotStyle }}"></div>
-                <span style="flex:1;font-size:15px;font-weight:600;color:#4A4136;">{{ a.label }}</span>
-                <span style="display:flex;flex-direction:column;gap:3px;padding:4px 2px;cursor:grab;">
-                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
-                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
-                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
-                </span>
-              </div>
             </sc-for>
           </div>
         </div>
@@ -723,24 +705,6 @@
             <sc-for list="{{ settingsDayOptions }}" as="d" hint-placeholder-count="7"><div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div></sc-for>
           </div>
         </div>
-        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:18px 20px;margin-bottom:14px;">
-          <h3 style="font-size:16px;font-weight:600;color:#4A4136;margin:0 0 4px;">What matters most</h3>
-          <p style="font-size:13.5px;color:#9A8C78;margin:0 0 14px;">Drag to reorder your five areas.</p>
-          <div style="display:flex;flex-direction:column;gap:8px;">
-            <sc-for list="{{ settingsAreaView }}" as="a" hint-placeholder-count="5">
-              <div draggable="true" onDragStart="{{ a.onDragStart }}" onDragOver="{{ a.onDragOver }}" onDrop="{{ a.onDrop }}" onDragEnd="{{ a.onDragEnd }}" style="{{ a.rowStyle }}">
-                <span style="font-size:14px;font-weight:700;color:#B7A589;width:16px;">{{ a.rank }}</span>
-                <div style="{{ a.dotStyle }}"></div>
-                <span style="flex:1;font-size:15px;font-weight:600;color:#4A4136;">{{ a.label }}</span>
-                <span style="display:flex;flex-direction:column;gap:3px;padding:4px 2px;cursor:grab;">
-                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
-                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
-                  <span style="display:flex;gap:3px;"><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span><span style="width:3px;height:3px;border-radius:50%;background:#C3B295;"></span></span>
-                </span>
-              </div>
-            </sc-for>
-          </div>
-        </div>
 
         <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Reminders</p>
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;margin-bottom:26px;">
@@ -786,9 +750,9 @@
 
         <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Help</p>
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;">
-          <a href="/cdn-cgi/l/email-protection#cfa7aaa3a3a08faeadbaa1abaebbaae1a0bda8" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;padding:15px 0;">
+          <a href="/cdn-cgi/l/email-protection#771f121b1b1837161502191316031259180510" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;padding:15px 0;">
             <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Contact support</span>
-            <span style="font-size:13.5px;color:#A8957B;"><span class="__cf_email__" data-cfemail="9af2fff6f6f5dafbf8eff4fefbeeffb4f5e8fd">[email&#160;protected]</span></span>
+            <span style="font-size:13.5px;color:#A8957B;"><span class="__cf_email__" data-cfemail="acc4c9c0c0c3eccdced9c2c8cdd8c982c3decb">[email&#160;protected]</span></span>
           </a>
           <div style="height:1px;background:#EFE4D2;"></div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 0;">
@@ -955,13 +919,13 @@ class Component extends DCLogic {
   }
 
   componentDidMount() {
-    const rawEntries = localStorage.getItem('exhale_entries_v1');
+    const rawEntries = localStorage.getItem('exhale_entries_v2');
     let entries = [];
     try { entries = JSON.parse(rawEntries || '[]'); } catch (e) {}
     if (rawEntries === null && (!Array.isArray(entries) || !entries.length)) entries = this.seed();
     if (!Array.isArray(entries)) entries = [];
     let reviews = [];
-    try { reviews = JSON.parse(localStorage.getItem('exhale_reviews_v1') || '[]'); } catch (e) {}
+    try { reviews = JSON.parse(localStorage.getItem('exhale_reviews_v2') || '[]'); } catch (e) {}
     if (!Array.isArray(reviews)) reviews = [];
     const settings = this.loadSettings();
     const screen = settings.onboarded ? 'home' : 'onboarding';
@@ -980,38 +944,22 @@ class Component extends DCLogic {
   }
 
   seed() {
-    return [
-      { id: 's3', date: '2026-06-12',
-        wins: ['Shipped the onboarding redesign', 'Finally called the accountant back', 'Two real gym sessions'],
-        differently: 'Block the first two hours of each morning for deep work before opening Slack.',
-        courage: 'Stop saying yes to calls I don\u2019t actually need to be on.',
-        areas: { health:{e:4,o:3}, social:{e:2,o:3}, professional:{e:5,o:4}, household:{e:3,o:3}, spiritual:{e:2,o:2} }, satisfaction: 3, highlight: 'Shipped the onboarding redesign I’d been dreading' },
-      { id: 's2', date: '2026-06-05',
-        wins: ['Landed the Carter proposal', 'Cooked dinner four nights running'],
-        differently: 'Take a proper lunch break away from the desk instead of eating at the keyboard.',
-        courage: 'Start a 20-minute walk straight after lunch, every day.',
-        areas: { health:{e:2,o:2}, social:{e:4,o:4}, professional:{e:4,o:5}, household:{e:4,o:4}, spiritual:{e:3,o:3} }, satisfaction: 4, highlight: 'Landed the Carter proposal' },
-      { id: 's1', date: '2026-05-29',
-        wins: ['Took Friday afternoon off, guilt-free', 'Cleared the whole inbox'],
-        differently: 'Stop checking email after 7pm \u2014 it never changes anything that night.',
-        courage: 'Start journaling on Sunday evenings to set up the week.',
-        areas: { health:{e:3,o:4}, social:{e:3,o:2}, professional:{e:3,o:3}, household:{e:2,o:2}, spiritual:{e:4,o:4} }, satisfaction: 4, highlight: 'Took Friday afternoon off, completely guilt-free' },
-    ];
+    return [];
   }
 
   save(entries) {
-    try { localStorage.setItem('exhale_entries_v1', JSON.stringify(entries)); } catch (e) {}
+    try { localStorage.setItem('exhale_entries_v2', JSON.stringify(entries)); } catch (e) {}
   }
 
   defaultSettings() {
     return { onboarded: false, closeDay: 'Friday', areaOrder: ['health', 'social', 'professional', 'household', 'spiritual'], cadence: 'quarterly', isPremium: false, reminders: { weeklyClose: true, review: true }, email: null, signedIn: false };
   }
   loadSettings() {
-    try { const s = JSON.parse(localStorage.getItem('exhale_settings_v1')); if (s && typeof s === 'object') return Object.assign(this.defaultSettings(), s); } catch (e) {}
+    try { const s = JSON.parse(localStorage.getItem('exhale_settings_v2')); if (s && typeof s === 'object') return Object.assign(this.defaultSettings(), s); } catch (e) {}
     return this.defaultSettings();
   }
-  saveSettings(st) { try { localStorage.setItem('exhale_settings_v1', JSON.stringify(st)); } catch (e) {} }
-  saveReviews(r) { try { localStorage.setItem('exhale_reviews_v1', JSON.stringify(r)); } catch (e) {} }
+  saveSettings(st) { try { localStorage.setItem('exhale_settings_v2', JSON.stringify(st)); } catch (e) {} }
+  saveReviews(r) { try { localStorage.setItem('exhale_reviews_v2', JSON.stringify(r)); } catch (e) {} }
 
   areaLabel(k) { const a = this.areaMeta.find(x => x.key === k); return a ? a.label : k; }
   areaColor(k) { const a = this.areaMeta.find(x => x.key === k); return a ? a.color : '#9A8C78'; }
@@ -1429,7 +1377,7 @@ class Component extends DCLogic {
   requestDelete() { this.setState({ confirmDelete: true }); }
   cancelDelete() { this.setState({ confirmDelete: false }); }
   doDelete() {
-    try { localStorage.setItem('exhale_entries_v1', '[]'); localStorage.setItem('exhale_reviews_v1', '[]'); } catch (e) {}
+    try { localStorage.setItem('exhale_entries_v2', '[]'); localStorage.setItem('exhale_reviews_v2', '[]'); } catch (e) {}
     const settings = this.defaultSettings();
     this.saveSettings(settings);
     this.setState({ entries: [], reviews: [], settings, confirmDelete: false, screen: 'onboarding', step: 0, draft: this.blankDraft(), onb: { day: settings.closeDay, order: settings.areaOrder.slice() } });
