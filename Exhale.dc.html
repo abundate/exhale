@@ -80,20 +80,65 @@
 
   <main ref="{{ mainRef }}" style="flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 18px 64px;">
 
-    <sc-if value="{{ isHome }}" hint-placeholder-val="{{ true }}">
+    <sc-if value="{{ isHomeClose }}" hint-placeholder-val="{{ true }}">
       <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
         <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
           <div style="{{ ringStyle }}"></div>
           <div style="{{ orbStyle }}"></div>
         </div>
         <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
-        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Let's close<br>the week.</h1>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Let’s close<br>the week.</h1>
         <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">A few quiet questions to tie up loose ends — so your mind can stop carrying them, and you can actually rest.</p>
         <button onClick="{{ begin }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Begin the exhale</button>
         <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
+        <button onClick="{{ releaseDay }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:16px;letter-spacing:.02em;" style-hover="color:#8A6A4A;">Just here to breathe? Release the day →</button>
       </div>
     </sc-if>
 
+    <sc-if value="{{ isHomeOpen }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Your week<br>is open.</h1>
+        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">You’re here for a reason. Take a few moments to breathe to the rhythm of the Exhale ball — and when you’re ready, press the button below to release the day so far.</p>
+        <button onClick="{{ releaseDay }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Release the day</button>
+        <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
+        <button onClick="{{ begin }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:16px;letter-spacing:.02em;" style-hover="color:#8A6A4A;">Close my week anyway →</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHomeVaries }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Your week<br>is open.</h1>
+        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">Whenever you’re ready, take a few quiet moments with the Exhale ball — then close your week.</p>
+        <button onClick="{{ begin }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Close my week</button>
+        <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
+        <button onClick="{{ setVariesRelease }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:16px;letter-spacing:.02em;" style-hover="color:#8A6A4A;">Just here to breathe? Release the day →</button>
+      </div>
+    </sc-if>
+
+    <sc-if value="{{ isHomeVariesRelease }}" hint-placeholder-val="{{ true }}">
+      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Your week<br>is open.</h1>
+        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">Take a few moments to breathe to the rhythm of the Exhale ball — and when you’re ready, press the button below to release the day so far.</p>
+        <button onClick="{{ releaseDay }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Release the day</button>
+        <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
+        <button onClick="{{ begin }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:16px;letter-spacing:.02em;" style-hover="color:#8A6A4A;">Close my week →</button>
+      </div>
+    </sc-if>
     <sc-if value="{{ isOnboarding }}">
       <div data-screen-label="Onboarding" style="max-width:540px;width:100%;padding:20px 14px 0;animation:fadeUp .6s ease both;">
         <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Welcome to Exhale</p>
@@ -102,8 +147,8 @@
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px;margin-bottom:16px;">
           <h3 style="font-size:17px;font-weight:600;color:#4A4136;margin:0 0 5px;">Which day do you close your week?</h3>
           <p style="font-size:14px;color:#9A8C78;margin:0 0 14px;">Pick the day your working week winds down.</p>
-          <div style="display:flex;gap:6px;">
-            <sc-for list="{{ dayOptions }}" as="d" hint-placeholder-count="7">
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <sc-for list="{{ dayOptions }}" as="d" hint-placeholder-count="8">
               <div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div>
             </sc-for>
           </div>
@@ -264,6 +309,20 @@
       </div>
     </sc-if>
 
+    <sc-if value="{{ isReleased }}">
+      <div data-screen-label="Released" style="max-width:520px;width:100%;text-align:center;padding:40px 14px 0;animation:fadeUp .8s ease both;">
+        <div style="position:relative;width:170px;height:170px;margin:10px auto 36px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 20px;">You’ve got this.</h1>
+        <p style="font-size:17.5px;line-height:1.65;color:#6F6454;margin:0 auto 38px;max-width:400px;">The day is released. Come back on your closing day to tie up the full week — for now, let yourself rest.</p>
+        <button onClick="{{ openSupportEmail }}" style="background:none;border:1.5px solid #DBCDB6;border-radius:40px;padding:14px 28px;font-family:inherit;font-size:16px;font-weight:600;color:#6F6454;cursor:pointer;margin-bottom:32px;" style-hover="border-color:#A8957B;color:#38312A;">Let me know what you need →</button>
+        <p style="font-family:'Newsreader',Georgia,serif;font-size:16px;font-style:italic;color:#A8957B;margin:0 0 28px;letter-spacing:.01em;">— with love from Hedvig</p>
+        <button onClick="{{ goHome }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;" style-hover="color:#8A6A4A;">← Back home</button>
+      </div>
+    </sc-if>
+
     <sc-if value="{{ isLog }}">
       <div data-screen-label="Log" style="max-width:600px;width:100%;padding:14px 8px 0;animation:fadeUp .5s ease both;">
         <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:38px;margin:0 0 10px;letter-spacing:-.01em;">Your log</h1>
@@ -271,18 +330,26 @@
         <sc-if value="{{ hasEntries }}">
           <div style="display:flex;flex-direction:column;gap:14px;">
             <sc-for list="{{ entriesView }}" as="e" hint-placeholder-count="3">
-              <div onClick="{{ e.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px 22px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">
-                  <span style="font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ e.dateLabel }}</span>
-                  <div style="display:flex;gap:5px;">
-                    <sc-for list="{{ e.dots }}" as="d" hint-placeholder-count="5">
-                      <div style="{{ d.style }}"></div>
-                    </sc-for>
-                  </div>
+              <sc-if value="{{ e.isRelease }}">
+                <div style="display:flex;align-items:center;gap:8px;padding:5px 4px;">
+                  <div style="width:5px;height:5px;border-radius:50%;background:#D9CDB8;flex:none;"></div>
+                  <span style="font-size:13px;color:#B7A589;letter-spacing:.03em;">{{ e.dateLabel }} · day released</span>
                 </div>
-                <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.3;color:#38312A;margin:0 0 8px;">{{ e.topWin }}</p>
-                <p style="font-size:14.5px;color:#9A8C78;margin:0;">{{ e.metaLabel }}</p>
-              </div>
+              </sc-if>
+              <sc-if value="{{ e.isFullClose }}">
+                <div onClick="{{ e.open }}" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:20px 22px;cursor:pointer;transition:all .2s ease;" style-hover="border-color:#D9C3AC;transform:translateY(-2px);box-shadow:0 12px 28px rgba(90,60,30,.08);">
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:11px;">
+                    <span style="font-size:14px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:#A8957B;">{{ e.dateLabel }}</span>
+                    <div style="display:flex;gap:5px;">
+                      <sc-for list="{{ e.dots }}" as="d" hint-placeholder-count="5">
+                        <div style="{{ d.style }}"></div>
+                      </sc-for>
+                    </div>
+                  </div>
+                  <p style="font-family:'Newsreader',Georgia,serif;font-size:20px;line-height:1.3;color:#38312A;margin:0 0 8px;">{{ e.topWin }}</p>
+                  <p style="font-size:14.5px;color:#9A8C78;margin:0;">{{ e.metaLabel }}</p>
+                </div>
+              </sc-if>
             </sc-for>
           </div>
         </sc-if>
@@ -694,26 +761,52 @@
         <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:38px;margin:0 0 24px;letter-spacing:-.01em;">Settings</h1>
 
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:16px 20px;margin-bottom:26px;">
-          <p style="font-size:13.5px;line-height:1.5;color:#7A6F5F;margin:0;">Everything you write stays private on this device. Accounts &amp; sync are coming soon.</p>
+          <p style="font-size:13.5px;line-height:1.5;color:#7A6F5F;margin:0;">Everything you write stays private on this device, which means your data might be lost if you don't back it up. If you don't want to lose data from past weeks, tap "Export my data" below.</p>
         </div>
 
         <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Your rhythm</p>
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:18px 20px;margin-bottom:14px;">
           <h3 style="font-size:16px;font-weight:600;color:#4A4136;margin:0 0 4px;">Close day</h3>
-          <p style="font-size:13.5px;color:#9A8C78;margin:0 0 14px;">The day your working week winds down.</p>
-          <div style="display:flex;gap:6px;">
-            <sc-for list="{{ settingsDayOptions }}" as="d" hint-placeholder-count="7"><div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div></sc-for>
+          <p style="font-size:13.5px;color:#9A8C78;margin:0 0 14px;">The day when you most need to "switch off" – for example, the last day of your work week.</p>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <sc-for list="{{ settingsDayOptions }}" as="d" hint-placeholder-count="8"><div onClick="{{ d.choose }}" style="{{ d.style }}">{{ d.label }}</div></sc-for>
           </div>
         </div>
 
-        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Reminders</p>
-        <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;margin-bottom:26px;">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px 0;">
-            <div><p style="font-size:15.5px;font-weight:600;color:#4A4136;margin:0 0 2px;">Weekly close nudge</p><p style="font-size:13.5px;color:#9A8C78;margin:0;">Every {{ closeDayLabel }}.</p></div>
-            <div onClick="{{ toggleRemWeekly }}" style="{{ remWeeklyStyle }}"><div style="{{ remWeeklyKnob }}"></div></div>
+        <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Getting started</p>
+        <sc-if value="{{ showChecklist }}">
+          <div data-setup-checklist="1" style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;margin-bottom:26px;">
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;">
+              <div onClick="{{ toggleReminderSet }}" style="{{ checkItem1Style }}"><span style="{{ checkMarkStyle }}">{{ checkItem1Mark }}</span></div>
+              <div style="flex:1;">
+                <p style="font-size:15.5px;font-weight:600;color:#4A4136;margin:0 0 3px;">Set a reminder to close your week</p>
+                <p style="font-size:13px;line-height:1.5;color:#9A8C78;margin:0;">We can't do in-app reminders yet. Use your phone's calendar, alarm, or a physical reminder that you'll close your week {{ closeDayText }} at a time that usually works for you.</p>
+              </div>
+            </div>
+            <div style="height:1px;background:#EFE4D2;"></div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;">
+              <div style="{{ checkItem2Style }}"><span style="{{ checkMarkStyle }}">{{ checkItem2Mark }}</span></div>
+              <div style="flex:1;">
+                <p style="font-size:15.5px;font-weight:600;color:#4A4136;margin:0 0 3px;">Close your first week</p>
+                <p style="font-size:13px;line-height:1.5;color:#9A8C78;margin:0;">Complete your first weekly close using Exhale.</p>
+              </div>
+            </div>
+            <div style="height:1px;background:#EFE4D2;"></div>
+            <div style="display:flex;align-items:flex-start;gap:14px;padding:16px 0;">
+              <div onClick="{{ completeSetup }}" style="{{ checkItem3Style }}"><span style="{{ checkMarkStyle }}">{{ checkItem3Mark }}</span></div>
+              <div style="flex:1;">
+                <p style="font-size:15.5px;font-weight:600;color:#4A4136;margin:0 0 3px;">Check this box to complete your Exhale setup</p>
+                <p style="font-size:13px;line-height:1.5;color:#9A8C78;margin:0;">Exhale is yours. Come back {{ closeDayText }} to close your week.</p>
+              </div>
+            </div>
           </div>
-          <p style="font-size:12.5px;line-height:1.5;color:#B0A287;margin:0 0 14px;">Reminders arrive once notifications are switched on — coming with the mobile app.</p>
-        </div>
+        </sc-if>
+        <sc-if value="{{ checklistDone }}">
+          <div style="background:#FCF8F1;border:1.5px solid #C8DDD3;border-radius:18px;padding:16px 20px;margin-bottom:26px;display:flex;align-items:center;gap:12px;animation:fadeUp .5s ease both;">
+            <div style="width:22px;height:22px;border-radius:50%;background:#0C4F37;display:flex;align-items:center;justify-content:center;flex:none;"><span style="color:#FFF;font-size:13px;line-height:1;">✓</span></div>
+            <p style="font-size:14.5px;color:#5A7B6A;margin:0;">All set — you're ready to close your weeks with Exhale.</p>
+          </div>
+        </sc-if>
 
         <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Appearance</p>
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:18px 20px;margin-bottom:26px;">
@@ -750,10 +843,10 @@
 
         <p style="text-transform:uppercase;letter-spacing:.14em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">Help</p>
         <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:18px;padding:6px 20px;">
-          <a href="/cdn-cgi/l/email-protection#771f121b1b1837161502191316031259180510" style="display:flex;align-items:center;justify-content:space-between;gap:10px;text-decoration:none;padding:15px 0;">
+          <button onClick="{{ openSupport }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;background:none;border:none;font-family:inherit;cursor:pointer;padding:15px 0;text-align:left;">
             <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Contact support</span>
-            <span style="font-size:13.5px;color:#A8957B;"><span class="__cf_email__" data-cfemail="acc4c9c0c0c3eccdced9c2c8cdd8c982c3decb">[email&#160;protected]</span></span>
-          </a>
+            <span style="font-size:13.5px;color:#A8957B;">{{ supportEmail }}</span>
+          </button>
           <div style="height:1px;background:#EFE4D2;"></div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 0;">
             <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Exhale by Abundate</span>
@@ -862,7 +955,7 @@
   </sc-if>
 </div>
 </x-dc>
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:880},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Abundate&quot;,&quot;Clay&quot;,&quot;Sage&quot;,&quot;Plum&quot;],&quot;default&quot;:&quot;Abundate&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;demoPremium&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Locked&quot;,&quot;Unlocked&quot;],&quot;default&quot;:&quot;Locked&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:880},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Abundate&quot;,&quot;Clay&quot;,&quot;Sage&quot;,&quot;Plum&quot;],&quot;default&quot;:&quot;Abundate&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;demoPremium&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Locked&quot;,&quot;Unlocked&quot;],&quot;default&quot;:&quot;Locked&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
 class Component extends DCLogic {
   state = {
     screen: 'home',
@@ -873,6 +966,7 @@ class Component extends DCLogic {
     entries: [],
     viewId: null,
     dissolving: false,
+    variesRelease: false,
     settings: this.loadSettings(),
     reviews: [],
     reviewDraft: null,
@@ -928,8 +1022,12 @@ class Component extends DCLogic {
     try { reviews = JSON.parse(localStorage.getItem('exhale_reviews_v2') || '[]'); } catch (e) {}
     if (!Array.isArray(reviews)) reviews = [];
     const settings = this.loadSettings();
-    const screen = settings.onboarded ? 'home' : 'onboarding';
-    this.setState({ entries, reviews, settings, screen, onb: { day: settings.closeDay, order: settings.areaOrder.slice() } });
+    const todayCheck = new Date().toISOString().slice(0, 10);
+    const closedTodayCheck = entries.length > 0 && entries[0].date === todayCheck && entries[0].type !== 'release';
+    const screen = settings.onboarded ? (closedTodayCheck ? 'complete' : 'home') : 'onboarding';
+    let setupState = { reminderSet: false, setupComplete: false, done: false };
+    try { const ss = JSON.parse(localStorage.getItem('exhale_setup_v1')); if (ss && typeof ss === 'object') setupState = Object.assign(setupState, ss); } catch (e) {}
+    this.setState({ entries, reviews, settings, screen, onb: { day: settings.closeDay, order: settings.areaOrder.slice() }, setupState });
 
     this._installCheck = () => {
       const standalone = (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) || window.navigator.standalone === true;
@@ -1365,12 +1463,71 @@ class Component extends DCLogic {
   confirmSignIn() { this.persistSettings({ email: this.state.authEmail, signedIn: true }); this.setState({ screen: 'settings' }); }
   signOut() { this.persistSettings({ signedIn: false }); }
 
+  goHome() {
+    const today = new Date().toISOString().slice(0, 10);
+    const st = this.state;
+    const closedToday = st.entries.length > 0 && st.entries[0].date === today && st.entries[0].type !== 'release';
+    this.setState({ screen: closedToday ? 'complete' : 'home', variesRelease: false });
+  }
+  releaseDay() {
+    const today = new Date().toISOString().slice(0, 10);
+    const entry = { id: 'r' + Date.now(), date: today, type: 'release' };
+    const entries = [entry, ...this.state.entries];
+    this.save(entries);
+    this.setState({ entries, screen: 'released' });
+  }
+  setVariesRelease() { this.setState({ variesRelease: true }); }
+  openSupportEmail() {
+    try {
+      const subj = encodeURIComponent("Here's what I need in this moment");
+      const body = encodeURIComponent("Hi Hedvig,\n\nI opened the Exhale app and just released the day. What made me open the app today was...\n\nAnd here\u2019s what I really need...");;
+      window.location.href = 'mai' + 'lto:hel' + 'lo@abun' + 'date.org?subject=' + subj + '&body=' + body;
+    } catch (e) {}
+  }
+  toggleReminderSet() {
+    const sc = Object.assign({ reminderSet: false, setupComplete: false, done: false }, this.state.setupState || {});
+    sc.reminderSet = !sc.reminderSet;
+    this.setState({ setupState: sc });
+    try { localStorage.setItem('exhale_setup_v1', JSON.stringify(sc)); } catch (e) {}
+  }
+  completeSetup() {
+    const sc = Object.assign({ reminderSet: false, setupComplete: false, done: false }, this.state.setupState || {});
+    if (sc.done) return;
+    sc.setupComplete = true;
+    this.setState({ setupState: sc }, () => {
+      this.dissolveNode('[data-setup-checklist]', false, () => {
+        const sc2 = Object.assign({}, this.state.setupState, { done: true });
+        this.setState({ setupState: sc2 });
+        try { localStorage.setItem('exhale_setup_v1', JSON.stringify(sc2)); } catch (e) {}
+      });
+    });
+  }
+  openSupport() {
+    try { window.location.href = 'mai' + 'lto:hel' + 'lo@abun' + 'date.org'; } catch (e) {}
+  }
   exportData() {
     try {
-      const data = { entries: this.state.entries, reviews: this.state.reviews, settings: this.state.settings, exportedAt: new Date().toISOString() };
-      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const areas = ['health','social','professional','household','spiritual'];
+      const areaLabels = ['Health','Social','Professional','Household','Spiritual'];
+      const esc = v => '"' + String(v == null ? '' : v).replace(/"/g, '""') + '"';
+      const headers = ['Date','Highlight','Wins','What to do differently','A braver step','Satisfaction',
+        ...areaLabels.flatMap(a => [a + ' effort', a + ' outcome'])];
+      const rows = [headers.map(esc).join(',')];
+      for (const e of this.state.entries) {
+        const row = [
+          e.date || '',
+          e.highlight || '',
+          (e.wins || []).join(' | '),
+          e.differently || '',
+          e.courage || '',
+          e.satisfaction || '',
+          ...areas.flatMap(a => [(e.areas && e.areas[a] && e.areas[a].e) || '', (e.areas && e.areas[a] && e.areas[a].o) || ''])
+        ];
+        rows.push(row.map(esc).join(','));
+      }
+      const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'exhale-export.json'; document.body.appendChild(a); a.click(); a.remove();
+      const a = document.createElement('a'); a.href = url; a.download = 'exhale-export.csv'; document.body.appendChild(a); a.click(); a.remove();
       setTimeout(() => URL.revokeObjectURL(url), 1500);
     } catch (e) {}
   }
@@ -1410,14 +1567,17 @@ class Component extends DCLogic {
     const satisfactionDots = [1,2,3,4,5].map(n => ({ key: 'sat'+n, style: this.dotStyle(n <= (s.draft.satisfaction || 0), pal.c), set: () => this.setSatisfaction(n) }));
 
     const entriesView = s.entries.map(e => {
+      if (e.type === 'release') {
+        return { key: e.id, isRelease: true, isFullClose: false, dateLabel: this.fmt(e.date, { weekday: 'short', month: 'short', day: 'numeric' }), open: () => {}, dots: [], topWin: '', metaLabel: '' };
+      }
       const winN = (e.wins || []).length;
       return {
-        key: e.id, id: e.id,
+        key: e.id, id: e.id, isRelease: false, isFullClose: true,
         dateLabel: this.fmt(e.date, { weekday: 'short', month: 'short', day: 'numeric' }),
         topWin: this.weekLabel(e),
         metaLabel: (winN === 1 ? '1 win' : winN + ' wins') + (e.courage ? ' · ' + e.courage : ''),
         open: () => this.setState({ screen: 'entry', viewId: e.id }),
-        dots: meta.map(a => ({ key: a.key, style: { width: '9px', height: '9px', borderRadius: '50%', background: a.color, opacity: 0.22 + 0.156 * (e.areas[a.key].o || 0) } })),
+        dots: meta.map(a => ({ key: a.key, style: { width: '9px', height: '9px', borderRadius: '50%', background: a.color, opacity: 0.22 + 0.156 * ((e.areas && e.areas[a.key] && e.areas[a.key].o) || 0) } })),
       };
     });
 
@@ -1559,10 +1719,18 @@ class Component extends DCLogic {
     }
     const cadenceWord = s.settings.cadence === 'monthly' ? 'monthly' : (s.settings.cadence === '4weeks' ? '4-week' : 'quarterly');
 
-    const count = s.entries.length;
+    const _rv_today = new Date().toISOString().slice(0, 10);
+    const _DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const _todayName = _DAYS[new Date().getDay()];
+    const _closeDay = s.settings.closeDay;
+    const closedToday = s.entries.length > 0 && s.entries[0].date === _rv_today && s.entries[0].type !== 'release';
+    const _isCloseDay = _closeDay !== 'varies' && _closeDay === _todayName;
+    const homeMode = _closeDay === 'varies' ? 'varies' : (_isCloseDay ? 'close' : 'open');
+    const variesRelease = !!s.variesRelease;
+    const count = s.entries.filter(e => !e.type || e.type !== 'release').length;
 
     // ---- settings, account, reminders, appearance, data ----
-    const settingsDayOptions = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(d => ({ key: d, label: d.slice(0, 3), choose: () => this.setSettingDay(d), style: this.dayStyle(d === s.settings.closeDay) }));
+    const settingsDayOptions = [...['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(d => ({ key: d, label: d.slice(0, 3), choose: () => this.setSettingDay(d), style: this.dayStyle(d === s.settings.closeDay) })), { key: 'varies', label: 'Varies', choose: () => this.setSettingDay('varies'), style: Object.assign({}, this.dayStyle(s.settings.closeDay === 'varies'), { flex: '0 0 100%' }) }];
     const settingsAreaView = (s.settings.areaOrder || []).map((k, i) => ({ key: k, rank: i + 1, label: this.areaLabel(k), dotStyle: { width: '10px', height: '10px', borderRadius: '50%', background: this.areaColor(k), flex: 'none' }, rowStyle: { display: 'flex', alignItems: 'center', gap: '12px', background: '#FBF6EE', border: '1.5px solid ' + (s.sDragKey === k ? pal.c : '#EFE4D2'), borderRadius: '12px', padding: '11px 14px', cursor: 'grab', opacity: s.sDragKey === k ? 0.5 : 1, transition: 'border-color .15s ease, opacity .15s ease' }, onDragStart: () => this.setState({ sDragKey: k }), onDragOver: (e) => this.onSettingsDragOver(k, e), onDrop: () => this.onSettingsDrop(), onDragEnd: () => this.onSettingsDrop() }));
     const cadenceOptions = [{ key: 'monthly', label: 'Monthly' }, { key: 'quarterly', label: 'Quarterly' }].map(o => ({ key: o.key, label: o.label, choose: () => this.setCadence(o.key), style: this.pillStyle(s.settings.cadence === o.key) }));
     const rem = Object.assign({ weeklyClose: true, review: true }, s.settings.reminders || {});
@@ -1587,7 +1755,11 @@ class Component extends DCLogic {
 
     return {
       isHome: s.screen === 'home', isRitual: s.screen === 'ritual', isComplete: s.screen === 'complete',
-      isLog: s.screen === 'log', isEntry: s.screen === 'entry',
+      isLog: s.screen === 'log', isEntry: s.screen === 'entry', isReleased: s.screen === 'released',
+      isHomeClose: s.screen === 'home' && homeMode === 'close' && !closedToday,
+      isHomeOpen: s.screen === 'home' && homeMode === 'open' && !closedToday,
+      isHomeVaries: s.screen === 'home' && homeMode === 'varies' && !closedToday && !variesRelease,
+      isHomeVariesRelease: s.screen === 'home' && homeMode === 'varies' && !closedToday && variesRelease,
       stepWins: s.screen === 'ritual' && stepKey === 'wins',
       stepHighlight: s.screen === 'ritual' && stepKey === 'highlight',
       stepFocus: s.screen === 'ritual' && stepKey === 'focus',
@@ -1611,8 +1783,8 @@ class Component extends DCLogic {
       areaRows,
       satisfactionDots,
 
-      hasEntries: count > 0,
-      emptyLog: count === 0,
+      hasEntries: s.entries.length > 0,
+      emptyLog: s.entries.length === 0,
       entriesView,
 
       isInsights: s.screen === 'insights',
@@ -1624,7 +1796,7 @@ class Component extends DCLogic {
       satLineStyle: { stroke: pal.c },
 
       isOnboarding: s.screen === 'onboarding',
-      dayOptions: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(d => ({ key: d, label: d.slice(0, 3), choose: () => this.setOnbDay(d), style: this.dayStyle(d === s.onb.day) })),
+      dayOptions: [...['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map(d => ({ key: d, label: d.slice(0, 3), choose: () => this.setOnbDay(d), style: this.dayStyle(d === s.onb.day) })), { key: 'varies', label: 'Varies', choose: () => this.setOnbDay('varies'), style: Object.assign({}, this.dayStyle(s.onb.day === 'varies'), { flex: '0 0 100%' }) }],
       areaRankView: s.onb.order.map((k, i) => ({ key: k, rank: i + 1, label: this.areaLabel(k), dotStyle: { width: '10px', height: '10px', borderRadius: '50%', background: this.areaColor(k), flex: 'none' }, rowStyle: { display: 'flex', alignItems: 'center', gap: '12px', background: '#FBF6EE', border: '1.5px solid ' + (s.dragKey === k ? pal.c : '#EFE4D2'), borderRadius: '12px', padding: '11px 14px', cursor: 'grab', opacity: s.dragKey === k ? 0.5 : 1, transition: 'border-color .15s ease, opacity .15s ease' }, onDragStart: () => this.setState({ dragKey: k }), onDragOver: (e) => this.onAreaDragOver(k, e), onDrop: (e) => this.onAreaDrop(e), onDragEnd: () => this.onAreaDragEnd() })),
       finishOnboarding: () => this.finishOnboarding(),
 
@@ -1666,6 +1838,20 @@ class Component extends DCLogic {
       upgradeFromSettings: () => this.openPaywall('settings'),
       openPortal: () => this.openPortal(),
       exportData: () => this.exportData(),
+      openSupport: () => this.openSupport(),
+      supportEmail: 'hello' + '@' + 'abundate.org',
+      closeDayText: s.settings.closeDay === 'varies' ? 'whenever works for you' : 'on ' + s.settings.closeDay + 's',
+      showChecklist: !(s.setupState && s.setupState.done),
+      checklistDone: !!(s.setupState && s.setupState.done),
+      toggleReminderSet: () => this.toggleReminderSet(),
+      completeSetup: () => this.completeSetup(),
+      checkItem1Style: { width: '22px', height: '22px', borderRadius: '50%', border: '2px solid ' + ((s.setupState && s.setupState.reminderSet) ? pal.c : '#DBCDB6'), background: (s.setupState && s.setupState.reminderSet) ? pal.c : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flex: 'none', marginTop: '2px', transition: 'all .2s ease' },
+      checkItem2Style: { width: '22px', height: '22px', borderRadius: '50%', border: '2px solid ' + (s.entries.length > 0 ? pal.c : '#DBCDB6'), background: s.entries.length > 0 ? pal.c : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', flex: 'none', marginTop: '2px', transition: 'all .2s ease' },
+      checkItem3Style: { width: '22px', height: '22px', borderRadius: '50%', border: '2px solid ' + ((s.setupState && s.setupState.setupComplete) ? pal.c : '#DBCDB6'), background: (s.setupState && s.setupState.setupComplete) ? pal.c : 'transparent', display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', flex: 'none', marginTop: '2px', transition: 'all .2s ease' },
+      checkMarkStyle: { color: '#FFF', fontSize: '13px', lineHeight: '1', fontWeight: '700' },
+      checkItem1Mark: (s.setupState && s.setupState.reminderSet) ? '✓' : '',
+      checkItem2Mark: s.entries.length > 0 ? '✓' : '',
+      checkItem3Mark: (s.setupState && s.setupState.setupComplete) ? '✓' : '',
       isInstallBanner: !s.installStandalone && !s.installDismissed && (s.installCanPrompt || s.installIsIOS) && s.screen === 'home',
       installIOS: !!s.installIsIOS,
       installAndroid: !!s.installCanPrompt && !s.installIsIOS,
@@ -1730,8 +1916,8 @@ class Component extends DCLogic {
       entryHasWins, entryHasHighlight, entryNoHighlight: !entryHasHighlight, entryHasDifferently, entryHasCourage,
       checkStyle: { width: '8px', height: '8px', borderRadius: '50%', background: pal.c, marginTop: '8px', flex: 'none' },
 
-      orbStyle: { width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', background: 'radial-gradient(circle at 38% 33%, ' + pal.soft + ' 0%, ' + pal.c + ' 62%, ' + pal.c + ' 100%)', animation: 'breathe 7s ease-in-out infinite', boxShadow: '0 24px 60px rgba(120,70,30,.18)' },
-      ringStyle: { width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', border: '1.5px solid ' + pal.c, animation: 'ring 7s ease-in-out infinite' },
+      orbStyle: { width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', background: 'radial-gradient(circle at 38% 33%, ' + pal.soft + ' 0%, ' + pal.c + ' 62%, ' + pal.c + ' 100%)', animation: 'breathe 11s ease-in-out infinite', boxShadow: '0 24px 60px rgba(120,70,30,.18)' },
+      ringStyle: { width: '100%', height: '100%', position: 'absolute', borderRadius: '50%', border: '1.5px solid ' + pal.c, animation: 'ring 11s ease-in-out infinite' },
       brandDotStyle: { width: '11px', height: '11px', borderRadius: '50%', background: pal.c },
       primaryBtnStyle: { background: pal.c, color: '#FFF9F0', border: 'none', padding: '15px 30px', borderRadius: '40px', fontFamily: 'inherit', fontSize: '16px', fontWeight: 600, letterSpacing: '.01em', cursor: 'pointer', boxShadow: '0 10px 26px rgba(120,70,30,.18)', transition: 'all .2s ease' },
 
@@ -1743,7 +1929,10 @@ class Component extends DCLogic {
       begin: () => this.begin(),
       next: () => this.next(),
       back: () => this.back(),
-      goHome: () => this.setState({ screen: 'home' }),
+      goHome: () => this.goHome(),
+      releaseDay: () => this.releaseDay(),
+      setVariesRelease: () => this.setVariesRelease(),
+      openSupportEmail: () => this.openSupportEmail(),
       goLog: () => this.setState({ screen: 'log' }),
       seeThisWeek: () => this.setState({ screen: 'entry' }),
       addWin: () => this.addWin(),
