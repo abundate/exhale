@@ -35,6 +35,7 @@
   @keyframes breathe{0%,100%{transform:scale(.80);opacity:.5;}50%{transform:scale(1.08);opacity:.95;}}
   @keyframes ring{0%,100%{transform:scale(.9);opacity:.35;}50%{transform:scale(1.15);opacity:.05;}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px);}to{opacity:1;transform:translateY(0);}}
+  @keyframes bloomOrb{from{transform:translate(-50%,-50%) scale(0);}to{transform:translate(-50%,-50%) scale(70);}}
   textarea,input{font-family:inherit;}
   textarea:focus,input:focus{outline:none;}
   ::placeholder{color:#B7A98F;}
@@ -81,8 +82,8 @@
   <main ref="{{ mainRef }}" style="flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 18px 64px;">
 
     <sc-if value="{{ isHomeClose }}" hint-placeholder-val="{{ true }}">
-      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
-        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+      <div data-release-home="1" data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div data-release-orb="1" style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
           <div style="{{ ringStyle }}"></div>
           <div style="{{ orbStyle }}"></div>
         </div>
@@ -96,8 +97,8 @@
     </sc-if>
 
     <sc-if value="{{ isHomeOpen }}" hint-placeholder-val="{{ true }}">
-      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
-        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+      <div data-release-home="1" data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div data-release-orb="1" style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
           <div style="{{ ringStyle }}"></div>
           <div style="{{ orbStyle }}"></div>
         </div>
@@ -111,14 +112,14 @@
     </sc-if>
 
     <sc-if value="{{ isHomeVaries }}" hint-placeholder-val="{{ true }}">
-      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
-        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+      <div data-release-home="1" data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div data-release-orb="1" style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
           <div style="{{ ringStyle }}"></div>
           <div style="{{ orbStyle }}"></div>
         </div>
         <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
         <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 18px;">Your week<br>is open.</h1>
-        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">Whenever you’re ready, take a few quiet moments with the Exhale ball — then close your week.</p>
+        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">Whenever you’re ready, close your week below.</p>
         <button onClick="{{ begin }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Close my week</button>
         <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
         <button onClick="{{ setVariesRelease }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;margin-top:16px;letter-spacing:.02em;" style-hover="color:#8A6A4A;">Just here to breathe? Release the day →</button>
@@ -126,8 +127,8 @@
     </sc-if>
 
     <sc-if value="{{ isHomeVariesRelease }}" hint-placeholder-val="{{ true }}">
-      <div data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
-        <div style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
+      <div data-release-home="1" data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div data-release-orb="1" style="position:relative;width:170px;height:170px;margin:18px auto 36px;display:flex;align-items:center;justify-content:center;">
           <div style="{{ ringStyle }}"></div>
           <div style="{{ orbStyle }}"></div>
         </div>
@@ -316,8 +317,7 @@
           <div style="{{ orbStyle }}"></div>
         </div>
         <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:46px;line-height:1.06;letter-spacing:-.01em;margin:0 0 20px;">You’ve got this.</h1>
-        <p style="font-size:17.5px;line-height:1.65;color:#6F6454;margin:0 auto 38px;max-width:400px;">The day is released. Come back on your closing day to tie up the full week — for now, let yourself rest.</p>
-        <button onClick="{{ openSupportEmail }}" style="background:none;border:1.5px solid #DBCDB6;border-radius:40px;padding:14px 28px;font-family:inherit;font-size:16px;font-weight:600;color:#6F6454;cursor:pointer;margin-bottom:32px;" style-hover="border-color:#A8957B;color:#38312A;">Let me know what you need →</button>
+        <p style="font-size:17.5px;line-height:1.65;color:#6F6454;margin:0 auto 38px;max-width:400px;">The day is released. Come back on your closing day to tie up the full week — for now, trust that every decision you make is the right one for you.</p>
         <p style="font-family:'Newsreader',Georgia,serif;font-size:16px;font-style:italic;color:#A8957B;margin:0 0 28px;letter-spacing:.01em;">— with love from Hedvig</p>
         <button onClick="{{ goHome }}" style="background:none;border:none;font-family:inherit;font-size:13.5px;color:#B7A589;cursor:pointer;" style-hover="color:#8A6A4A;">← Back home</button>
       </div>
@@ -780,7 +780,7 @@
               <div onClick="{{ toggleReminderSet }}" style="{{ checkItem1Style }}"><span style="{{ checkMarkStyle }}">{{ checkItem1Mark }}</span></div>
               <div style="flex:1;">
                 <p style="font-size:15.5px;font-weight:600;color:#4A4136;margin:0 0 3px;">Set a reminder to close your week</p>
-                <p style="font-size:13px;line-height:1.5;color:#9A8C78;margin:0;">We can't do in-app reminders yet. Use your phone's calendar, alarm, or a physical reminder that you'll close your week {{ closeDayText }} at a time that usually works for you.</p>
+                <p style="font-size:13px;line-height:1.5;color:#9A8C78;margin:0;">We can't do in-app reminders yet. Use your phone's calendar, alarm, or a physical reminder{{ reminderDaySuffix }}, at a time that works for you.</p>
               </div>
             </div>
             <div style="height:1px;background:#EFE4D2;"></div>
@@ -850,7 +850,7 @@
           <div style="height:1px;background:#EFE4D2;"></div>
           <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:15px 0;">
             <span style="font-size:15.5px;font-weight:600;color:#4A4136;">Exhale by Abundate</span>
-            <span style="font-size:13.5px;color:#9A8C78;">Version 1.0</span>
+            <span style="font-size:13.5px;color:#9A8C78;">Version 1.1</span>
           </div>
         </div>
       </div>
@@ -950,12 +950,18 @@
 
   </main>
 
+  <sc-if value="{{ isReleasing }}">
+    <div style="position:fixed;left:{{ bloomX }}px;top:{{ bloomY }}px;width:0;height:0;z-index:55;pointer-events:none;">
+      <div style="position:absolute;width:90px;height:90px;border-radius:50%;background:{{ bloomColor }};animation:bloomOrb 2.2s cubic-bezier(.25,.46,.45,.94) forwards;"></div>
+    </div>
+  </sc-if>
+
   <sc-if value="{{ dissolving }}">
     <canvas ref="{{ canvasRef }}" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:60;pointer-events:none;"></canvas>
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:880},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Abundate&quot;,&quot;Clay&quot;,&quot;Sage&quot;,&quot;Plum&quot;],&quot;default&quot;:&quot;Abundate&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;demoPremium&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Locked&quot;,&quot;Unlocked&quot;],&quot;default&quot;:&quot;Locked&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:420,&quot;height&quot;:880},&quot;accent&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Abundate&quot;,&quot;Clay&quot;,&quot;Sage&quot;,&quot;Plum&quot;],&quot;default&quot;:&quot;Abundate&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;demoPremium&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;Locked&quot;,&quot;Unlocked&quot;],&quot;default&quot;:&quot;Locked&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;resetApp&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;section&quot;:&quot;Developer&quot;,&quot;tsType&quot;:&quot;boolean&quot;}}">
 class Component extends DCLogic {
   state = {
     screen: 'home',
@@ -966,6 +972,9 @@ class Component extends DCLogic {
     entries: [],
     viewId: null,
     dissolving: false,
+    releasing: false,
+    bloomX: 0,
+    bloomY: 0,
     variesRelease: false,
     settings: this.loadSettings(),
     reviews: [],
@@ -1275,6 +1284,24 @@ class Component extends DCLogic {
     this.dissolveNode('[data-screen-label="Complete"]', true, null);
   }
 
+  dissolveNavigate(sel, nextState) {
+    const main = this.mainRef && this.mainRef.current;
+    const node = main ? main.querySelector(sel) : null;
+    if (!node) { this.setState(nextState); return; }
+    this.captureNode(node).then(cap => {
+      this.setState({ dissolving: true }, () => {
+        this.runShatter(cap, () => {
+          node.style.transition = 'none';
+          node.style.opacity = '0';
+        }, () => {
+          // Merge dissolving:false + navigation in ONE setState — no gap.
+          this.setState(Object.assign({ dissolving: false }, nextState));
+        });
+      });
+    }).catch(() => {
+      this.setState(Object.assign({ dissolving: false }, nextState));
+    });
+  }
   dissolveNode(sel, restore, onDone) {
     const main = this.mainRef && this.mainRef.current;
     const node = main ? main.querySelector(sel) : null;
@@ -1327,7 +1354,7 @@ class Component extends DCLogic {
           cx.drawImage(img, 0, 0, w, h);
           resolve({ canvas: c, w: w, h: h, dpr: dpr, left: rect.left, top: rect.top });
         };
-        img.onerror = reject;
+        img.onerror = () => reject(new Error('capture failed'));
         img.src = url;
       } catch (e) { reject(e); }
     });
@@ -1474,7 +1501,15 @@ class Component extends DCLogic {
     const entry = { id: 'r' + Date.now(), date: today, type: 'release' };
     const entries = [entry, ...this.state.entries];
     this.save(entries);
-    this.setState({ entries, screen: 'released' });
+    const main = this.mainRef && this.mainRef.current;
+    const orbEl = main ? main.querySelector('[data-release-orb]') : null;
+    const orbRect = orbEl ? orbEl.getBoundingClientRect() : null;
+    const bloomX = orbRect ? orbRect.left + orbRect.width / 2 : window.innerWidth / 2;
+    const bloomY = orbRect ? orbRect.top + orbRect.height / 2 : window.innerHeight / 2;
+    this.setState({ releasing: true, bloomX, bloomY });
+    setTimeout(() => {
+      this.setState({ releasing: false, entries, screen: 'released' });
+    }, 1400);
   }
   setVariesRelease() { this.setState({ variesRelease: true }); }
   openSupportEmail() {
@@ -1502,8 +1537,29 @@ class Component extends DCLogic {
       });
     });
   }
+  componentDidUpdate(pp, ps) {
+    if (this.props.resetApp && !pp.resetApp) {
+      try {
+        ['exhale_entries_v2','exhale_reviews_v2','exhale_settings_v2','exhale_setup_v1'].forEach(k => localStorage.removeItem(k));
+      } catch(e) {}
+      const ds = this.defaultSettings();
+      this.setState({
+        entries: [], reviews: [],
+        settings: ds,
+        screen: 'onboarding',
+        onb: { day: ds.closeDay, order: ds.areaOrder.slice() },
+        setupState: { reminderSet: false, setupComplete: false, done: false },
+        draft: this.blankDraft(), step: 0, viewId: null,
+        dissolving: false, releasing: false, variesRelease: false,
+      });
+    }
+  }
   openSupport() {
-    try { window.location.href = 'mai' + 'lto:hel' + 'lo@abun' + 'date.org'; } catch (e) {}
+    try {
+      const subj = encodeURIComponent("I need a little support with Exhale");
+      const body = encodeURIComponent("Hi Hedvig,\n\nI wanted to reach out because...\n\nHere’s what would be most helpful right now...");
+      window.location.href = 'mai' + 'lto:hel' + 'lo@abun' + 'date.org?subject=' + subj + '&body=' + body;
+    } catch (e) {}
   }
   exportData() {
     try {
@@ -1606,7 +1662,7 @@ class Component extends DCLogic {
     }
 
     // ---- insights (AI-free: derived from ratings + the user's own words) ----
-    const sorted = [...s.entries].sort((a, b) => a.date < b.date ? -1 : 1);
+    const sorted = [...s.entries].filter(e => !e.type || e.type !== 'release').sort((a, b) => a.date < b.date ? -1 : 1);
     const wn = sorted.length;
     const satEntries = sorted.filter(e => (e.satisfaction || 0) > 0);
     const avg = arr => arr.reduce((x, y) => x + y, 0) / Math.max(arr.length, 1);
@@ -1756,6 +1812,10 @@ class Component extends DCLogic {
     return {
       isHome: s.screen === 'home', isRitual: s.screen === 'ritual', isComplete: s.screen === 'complete',
       isLog: s.screen === 'log', isEntry: s.screen === 'entry', isReleased: s.screen === 'released',
+      isReleasing: !!s.releasing,
+      bloomX: s.bloomX || 0,
+      bloomY: s.bloomY || 0,
+      bloomColor: ({ Abundate: '#CCE6DE', Clay: '#F5DDD4', Sage: '#DAE3D6', Plum: '#EBD8E8' })[s.settings.accent || 'Abundate'] || '#CCE6DE',
       isHomeClose: s.screen === 'home' && homeMode === 'close' && !closedToday,
       isHomeOpen: s.screen === 'home' && homeMode === 'open' && !closedToday,
       isHomeVaries: s.screen === 'home' && homeMode === 'varies' && !closedToday && !variesRelease,
@@ -1841,6 +1901,7 @@ class Component extends DCLogic {
       openSupport: () => this.openSupport(),
       supportEmail: 'hello' + '@' + 'abundate.org',
       closeDayText: s.settings.closeDay === 'varies' ? 'whenever works for you' : 'on ' + s.settings.closeDay + 's',
+      reminderDaySuffix: s.settings.closeDay === 'varies' ? '' : ' to close your week on ' + s.settings.closeDay,
       showChecklist: !(s.setupState && s.setupState.done),
       checklistDone: !!(s.setupState && s.setupState.done),
       toggleReminderSet: () => this.toggleReminderSet(),
