@@ -1,5 +1,5 @@
 /* Exhale service worker — offline app shell + runtime caching */
-const CACHE = 'exhale-v1.1';
+const CACHE = 'exhale-v1.1.1';
 
 /* Core files that make the app work offline. Kept small + resilient:
    if any single file 404s during install we still finish (addAll is all-or-nothing,
