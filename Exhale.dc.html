@@ -54,13 +54,18 @@
       </div>
     </div>
     <div style="display:flex;align-items:center;gap:2px;">
-      <button onClick="{{ goLog }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;font-weight:500;color:#7A6F5F;cursor:pointer;padding:8px 8px;letter-spacing:.01em;" style-hover="color:#38312A;">Your log</button>
+      <button onClick="{{ goHome }}" aria-label="Home" style="background:none;border:none;cursor:pointer;padding:8px 6px;display:flex;align-items:center;color:#7A6F5F;" style-hover="color:#38312A;">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 10.5L12 3l9 7.5V21a1 1 0 0 1-1 1H15v-5h-6v5H4a1 1 0 0 1-1-1V10.5z"></path>
+        </svg>
+      </button>
       <button onClick="{{ goSettings }}" aria-label="Settings" style="background:none;border:none;cursor:pointer;padding:8px 6px;display:flex;align-items:center;color:#7A6F5F;" style-hover="color:#38312A;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
           <line x1="4" y1="8" x2="20" y2="8"></line><circle cx="9" cy="8" r="2.6" fill="#F6EDDD"></circle>
           <line x1="4" y1="16" x2="20" y2="16"></line><circle cx="15" cy="16" r="2.6" fill="#F6EDDD"></circle>
         </svg>
       </button>
+      <button onClick="{{ goLog }}" style="background:none;border:none;font-family:inherit;font-size:14.5px;font-weight:500;color:#7A6F5F;cursor:pointer;padding:8px 8px;letter-spacing:.01em;" style-hover="color:#38312A;">Your log</button>
     </div>
   </header>
 
@@ -80,6 +85,23 @@
   </sc-if>
 
   <main ref="{{ mainRef }}" style="flex:1;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:0 18px 64px;">
+
+    <sc-if value="{{ isHomeClosedToday }}" hint-placeholder-val="{{ false }}">
+      <div data-release-home="1" data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
+        <div style="background:#EBF4EF;border:1.5px solid #C8DDD3;border-radius:14px;padding:11px 18px;margin-bottom:28px;display:inline-flex;align-items:center;gap:8px;">
+          <div style="width:8px;height:8px;border-radius:50%;background:#0C4F37;flex:none;"></div>
+          <span style="font-size:14px;font-weight:600;color:#0C4F37;">Your week is closed</span>
+        </div>
+        <div data-release-orb="1" style="position:relative;width:170px;height:170px;margin:4px auto 36px;display:flex;align-items:center;justify-content:center;">
+          <div style="{{ ringStyle }}"></div>
+          <div style="{{ orbStyle }}"></div>
+        </div>
+        <p style="text-transform:uppercase;letter-spacing:.2em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 14px;">{{ todayLabel }}</p>
+        <p style="font-size:17.5px;line-height:1.6;color:#6F6454;margin:0 auto 34px;max-width:400px;">Take a moment with the Exhale ball, or come back next week to close again.</p>
+        <button onClick="{{ releaseDay }}" style="{{ primaryBtnStyle }}" style-hover="filter:brightness(.94);transform:translateY(-1px);">Release the day</button>
+        <p style="font-size:14px;color:#A8957B;margin:24px 0 0;letter-spacing:.01em;">{{ countLabel }}</p>
+      </div>
+    </sc-if>
 
     <sc-if value="{{ isHomeClose }}" hint-placeholder-val="{{ true }}">
       <div data-release-home="1" data-screen-label="Home" style="max-width:540px;width:100%;text-align:center;padding:36px 14px 0;animation:fadeUp .7s ease both;">
@@ -197,7 +219,7 @@
             <p style="text-transform:uppercase;letter-spacing:.16em;font-size:11.5px;font-weight:600;color:#A8957B;margin:0 0 12px;">The headline</p>
             <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">If this week had a title, what would it be?</h2>
             <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">The one thing you most want to celebrate — the moment that defined the week. This becomes the name of your week.</p>
-            <input value="{{ draftHighlight }}" onChange="{{ onHighlight }}" placeholder="The week I finally…" style="width:100%;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:16px 18px;font-family:'Newsreader',Georgia,serif;font-size:21px;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;">
+            <input value="{{ draftHighlight }}" onChange="{{ onHighlight }}" placeholder="The week when I…" style="width:100%;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:16px 18px;font-family:'Newsreader',Georgia,serif;font-size:21px;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;">
           </div>
         </sc-if>
 
@@ -239,7 +261,17 @@
         <sc-if value="{{ stepAreas }}">
           <div style="animation:fadeUp .5s ease both;">
             <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">How did your week feel?</h2>
-            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 26px;">Across five areas, rate the <strong style="font-weight:600;color:#4A4136;">effort</strong> you put in and the <strong style="font-weight:600;color:#4A4136;">outcome</strong> you got. A little on the left, a lot on the right. No wrong answers.</p>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 20px;">Across five areas, rate the <strong style="font-weight:600;color:#4A4136;">effort</strong> you put in and the <strong style="font-weight:600;color:#4A4136;">outcome</strong> you got. No wrong answers.</p>
+            <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:10px;padding-right:20px;">
+              <div style="width:94px;flex:none;"></div>
+              <div style="display:flex;gap:9px;">
+                <span style="width:28px;height:28px;display:flex;align-items:center;justify-content:flex-start;font-size:11px;font-weight:600;color:#C3B295;">Low</span>
+                <span style="width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#C3B295;"></span>
+                <span style="width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#C3B295;"></span>
+                <span style="width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;color:#C3B295;"></span>
+                <span style="width:28px;height:28px;display:flex;align-items:center;justify-content:flex-end;font-size:11px;font-weight:600;color:#C3B295;">High</span>
+              </div>
+            </div>
             <div style="display:flex;flex-direction:column;gap:22px;">
               <sc-for list="{{ areaRows }}" as="area" hint-placeholder-count="5">
                 <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:18px 18px 16px;">
@@ -297,7 +329,7 @@
         <h1 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:42px;line-height:1.08;margin:0 0 20px;letter-spacing:-.01em;">Your week<br>is closed.</h1>
         <sc-if value="{{ entryHasHighlight }}">
           <div style="background:#FCF8F1;border:1.5px solid #EFE4D2;border-radius:16px;padding:18px 22px;margin:0 auto 30px;max-width:420px;">
-            <p style="font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#A8957B;margin:0 0 8px;">The week of</p>
+            <p style="font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#A8957B;margin:0 0 8px;">THE WEEK WHEN I</p>
             <p style="font-family:'Newsreader',Georgia,serif;font-size:22px;line-height:1.3;color:#38312A;margin:0;">{{ entryHighlight }}</p>
           </div>
         </sc-if>
@@ -1032,8 +1064,7 @@ class Component extends DCLogic {
     if (!Array.isArray(reviews)) reviews = [];
     const settings = this.loadSettings();
     const todayCheck = new Date().toISOString().slice(0, 10);
-    const closedTodayCheck = entries.length > 0 && entries[0].date === todayCheck && entries[0].type !== 'release';
-    const screen = settings.onboarded ? (closedTodayCheck ? 'complete' : 'home') : 'onboarding';
+    const screen = settings.onboarded ? 'home' : 'onboarding';
     let setupState = { reminderSet: false, setupComplete: false, done: false };
     try { const ss = JSON.parse(localStorage.getItem('exhale_setup_v1')); if (ss && typeof ss === 'object') setupState = Object.assign(setupState, ss); } catch (e) {}
     this.setState({ entries, reviews, settings, screen, onb: { day: settings.closeDay, order: settings.areaOrder.slice() }, setupState });
@@ -1072,7 +1103,42 @@ class Component extends DCLogic {
   areaColor(k) { const a = this.areaMeta.find(x => x.key === k); return a ? a.color : '#9A8C78'; }
   cadenceWeeks() { const c = this.state.settings.cadence; if (c === 'monthly') return 4; if (c === '4weeks') return 4; return 13; }
   activeGoals() { const r = this.state.reviews; return (r && r[0] && Array.isArray(r[0].goals)) ? r[0].goals.filter(g => !g.retired) : []; }
-  ritualSteps() { return this.activeGoals().length > 0 ? ['wins', 'highlight', 'focus', 'differently', 'courage', 'areas'] : ['wins', 'highlight', 'differently', 'courage', 'areas']; }
+  ritualSteps() { return this.activeGoals().length > 0 ? ['wins', 'focus', 'differently', 'courage', 'areas', 'highlight'] : ['wins', 'differently', 'courage', 'areas', 'highlight']; }
+  clusterDots(dots) {
+    const threshold = 4; // % — consider overlapping within this distance
+    const groups = [];
+    for (const d of dots) {
+      let found = false;
+      for (const g of groups) {
+        if (Math.abs(g.cx - d._left) < threshold && Math.abs(g.cy - d._top) < threshold) {
+          g.members.push(d); found = true; break;
+        }
+      }
+      if (!found) groups.push({ cx: d._left, cy: d._top, members: [d] });
+    }
+    const result = [];
+    for (const g of groups) {
+      const n = g.members.length;
+      if (n === 1) {
+        result.push(g.members[0]);
+      } else {
+        const r = n === 2 ? 7 : n === 3 ? 8 : 9; // px radius of fan
+        g.members.forEach((d, i) => {
+          const angle = (i / n) * Math.PI * 2 - Math.PI / 2;
+          const ox = Math.round(Math.cos(angle) * r);
+          const oy = Math.round(Math.sin(angle) * r);
+          const sz = n === 2 ? '13px' : '12px';
+          result.push(Object.assign({}, d, {
+            wrapStyle: Object.assign({}, d.wrapStyle, {
+              transform: 'translate(calc(-50% + ' + ox + 'px), calc(-50% + ' + oy + 'px))',
+            }),
+            dotStyle: Object.assign({}, d.dotStyle, { width: sz, height: sz }),
+          }));
+        });
+      }
+    }
+    return result;
+  }
   weekLabel(e) { return (e && e.highlight && e.highlight.trim()) || (e && e.wins && e.wins[0]) || 'A quiet week.'; }
 
   setOnbDay(day) { this.setState(s => ({ onb: { ...s.onb, day } })); }
@@ -1491,10 +1557,7 @@ class Component extends DCLogic {
   signOut() { this.persistSettings({ signedIn: false }); }
 
   goHome() {
-    const today = new Date().toISOString().slice(0, 10);
-    const st = this.state;
-    const closedToday = st.entries.length > 0 && st.entries[0].date === today && st.entries[0].type !== 'release';
-    this.setState({ screen: closedToday ? 'complete' : 'home', variesRelease: false });
+    this.setState({ screen: 'home', variesRelease: false });
   }
   releaseDay() {
     const today = new Date().toISOString().slice(0, 10);
@@ -1650,15 +1713,16 @@ class Component extends DCLogic {
       entryHasWins = entryWins.length > 0;
       entryHasDifferently = !!entryDifferently;
       entryHasCourage = !!entryCourage;
-      plotDots = meta.map(a => {
+      plotDots = this.clusterDots(meta.map(a => {
         const v = cur.areas[a.key];
         return {
           key: a.key, label: a.label,
+          _left: 8 + v.o / 5 * 84, _top: 8 + (5 - v.e) / 5 * 84,
           wrapStyle: { position: 'absolute', left: (8 + v.o / 5 * 84) + '%', top: (8 + (5 - v.e) / 5 * 84) + '%', transform: 'translate(-50%,-50%)', pointerEvents: 'none' },
           dotStyle: { width: '16px', height: '16px', borderRadius: '50%', background: a.color, border: '2.5px solid #FCF8F1', boxShadow: '0 3px 9px rgba(80,50,20,.22)' },
           legendStyle: { width: '10px', height: '10px', borderRadius: '50%', background: a.color, flex: 'none' },
         };
-      });
+      }));
     }
 
     // ---- insights (AI-free: derived from ratings + the user's own words) ----
@@ -1816,6 +1880,7 @@ class Component extends DCLogic {
       bloomX: s.bloomX || 0,
       bloomY: s.bloomY || 0,
       bloomColor: ({ Abundate: '#CCE6DE', Clay: '#F5DDD4', Sage: '#DAE3D6', Plum: '#EBD8E8' })[s.settings.accent || 'Abundate'] || '#CCE6DE',
+      isHomeClosedToday: s.screen === 'home' && closedToday,
       isHomeClose: s.screen === 'home' && homeMode === 'close' && !closedToday,
       isHomeOpen: s.screen === 'home' && homeMode === 'open' && !closedToday,
       isHomeVaries: s.screen === 'home' && homeMode === 'varies' && !closedToday && !variesRelease,
@@ -1829,7 +1894,7 @@ class Component extends DCLogic {
       stepNumber: s.step + 1,
       totalSteps: ritualSteps.length,
       backLabel: s.step === 0 ? 'Close for now' : 'Back',
-      continueLabel: stepKey === 'areas' ? 'Close the week' : 'Continue',
+      continueLabel: stepKey === 'highlight' ? 'Close the week' : 'Continue',
       progressFillStyle: { width: ((s.step + 1) / ritualSteps.length * 100) + '%', height: '100%', background: pal.c, borderRadius: '40px', transition: 'width .45s cubic-bezier(.4,0,.2,1)' },
 
       todayLabel: this.fmtUK(new Date()),
