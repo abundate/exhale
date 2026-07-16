@@ -201,6 +201,7 @@
             <div style="display:flex;flex-direction:column;gap:9px;">
               <sc-for list="{{ winChips }}" as="chip" hint-placeholder-count="2">
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;background:#F4E9D8;border-radius:12px;padding:7px 8px 7px 9px;animation:fadeUp .35s ease both;">
+                  <span style="font-size:13px;font-weight:600;color:#B7A055;flex:none;width:18px;text-align:right;">{{ chip.n }}.</span>
                   <sc-if value="{{ chip.editing }}">
                     <input value="{{ chip.text }}" ref="{{ chip.inputRef }}" onChange="{{ chip.onEdit }}" onKeyDown="{{ chip.onEditKey }}" onBlur="{{ chip.commit }}" style="flex:1;background:#FFFDF9;border:1.5px solid #C4895F;border-radius:9px;padding:9px 11px;font-size:15.5px;color:#38312A;" style-focus="box-shadow:0 0 0 3px #F3E4D5;">
                   </sc-if>
@@ -211,6 +212,10 @@
                 </div>
               </sc-for>
             </div>
+            <label style="display:flex;align-items:center;gap:8px;margin-top:16px;cursor:pointer;user-select:none;">
+              <div onClick="{{ toggleCommaSplit }}" style="{{ commaSplitToggleStyle }}"><div style="{{ commaSplitToggleKnob }}"></div></div>
+              <span style="font-size:13px;color:#9A8C78;">Comma creates a new list item</span>
+            </label>
           </div>
         </sc-if>
 
@@ -245,7 +250,7 @@
         <sc-if value="{{ stepDifferently }}">
           <div style="animation:fadeUp .5s ease both;">
             <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">What will you do differently next week?</h2>
-            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">Anything you want to remember, adjust, or keep going with.</p>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">Here's a free space to write down anything you want to do better. Let it out here so you can release the pressure to remember it all.</p>
             <textarea value="{{ draftDifferently }}" onChange="{{ onDifferently }}" placeholder="Set myself a &quot;One Thing&quot; priority to complete each workday…" style="width:100%;min-height:150px;resize:none;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:17px 18px;font-size:16.5px;line-height:1.6;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;"></textarea>
           </div>
         </sc-if>
@@ -253,7 +258,7 @@
         <sc-if value="{{ stepCourage }}">
           <div style="animation:fadeUp .5s ease both;">
             <h2 style="font-family:'Newsreader',Georgia,serif;font-weight:400;font-size:33px;line-height:1.12;margin:0 0 12px;letter-spacing:-.01em;">One thing to start or stop.</h2>
-            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">What's one habit or thought pattern — something to start doing, or to stop doing — that would help you live a little more courageously?</p>
+            <p style="font-size:16px;line-height:1.55;color:#6F6454;margin:0 0 24px;">Change takes courage. What's one habit or thought pattern — something to start doing, or to stop doing — that could help you live a little more courageously?</p>
             <textarea value="{{ draftCourage }}" onChange="{{ onCourage }}" placeholder="Stop saying yes to calls I don't need to be on…" style="width:100%;min-height:150px;resize:none;background:#FCF8F1;border:1.5px solid #E7DAC6;border-radius:15px;padding:17px 18px;font-size:16.5px;line-height:1.6;color:#38312A;" style-focus="border-color:#C4895F;box-shadow:0 0 0 4px #F3E4D5;"></textarea>
           </div>
         </sc-if>
@@ -1026,11 +1031,11 @@ class Component extends DCLogic {
   };
 
   areaMeta = [
-    { key: 'health',       label: 'Health & fitness', color: '#C0683F' },
-    { key: 'social',       label: 'Friends & family', color: '#CC9A43' },
-    { key: 'professional', label: 'Work & productivity', color: '#7E8E6E' },
-    { key: 'household',    label: 'Home & admin',     color: '#6E8190' },
-    { key: 'spiritual',    label: 'Spirit & purpose', color: '#A06A8A' },
+    { key: 'health',       label: 'Health', color: '#C0683F' },
+    { key: 'social',       label: 'Social', color: '#CC9A43' },
+    { key: 'professional', label: 'Work / Study', color: '#7E8E6E' },
+    { key: 'household',    label: 'Home',     color: '#6E8190' },
+    { key: 'spiritual',    label: 'Spirituality', color: '#A06A8A' },
   ];
 
   canvasRef = React.createRef();
@@ -1090,7 +1095,7 @@ class Component extends DCLogic {
   }
 
   defaultSettings() {
-    return { onboarded: false, closeDay: 'Friday', areaOrder: ['health', 'social', 'professional', 'household', 'spiritual'], cadence: 'quarterly', isPremium: false, reminders: { weeklyClose: true, review: true }, email: null, signedIn: false };
+    return { onboarded: false, closeDay: 'Friday', areaOrder: ['health', 'social', 'professional', 'household', 'spiritual'], cadence: 'quarterly', isPremium: false, reminders: { weeklyClose: true, review: true }, email: null, signedIn: false, commaSplit: true };
   }
   loadSettings() {
     try { const s = JSON.parse(localStorage.getItem('exhale_settings_v2')); if (s && typeof s === 'object') return Object.assign(this.defaultSettings(), s); } catch (e) {}
@@ -1298,6 +1303,23 @@ class Component extends DCLogic {
     const w = (this.state.winInput || '').trim();
     if (!w) return;
     this.setState(s => ({ winInput: '', draft: { ...s.draft, wins: [...s.draft.wins, w] } }));
+  }
+  onWinInput(val) {
+    if (this.state.settings.commaSplit && val.includes(',')) {
+      const parts = val.split(',');
+      const rest = parts.pop();
+      const toAdd = parts.map(p => p.trim()).filter(Boolean);
+      if (toAdd.length) {
+        this.setState(s => ({ winInput: rest, draft: { ...s.draft, wins: [...s.draft.wins, ...toAdd] } }));
+        return;
+      }
+    }
+    this.setState({ winInput: val });
+  }
+  toggleCommaSplit() {
+    const settings = { ...this.state.settings, commaSplit: !this.state.settings.commaSplit };
+    this.saveSettings(settings);
+    this.setState({ settings });
   }
   editWin(i) { this.setState({ editingWin: i }); }
   updateWin(i, val) {
@@ -1840,12 +1862,8 @@ class Component extends DCLogic {
     const cadenceWord = s.settings.cadence === 'monthly' ? 'monthly' : (s.settings.cadence === '4weeks' ? '4-week' : 'quarterly');
 
     const _rv_today = new Date().toISOString().slice(0, 10);
-    const _DAYS = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const _todayName = _DAYS[new Date().getDay()];
-    const _closeDay = s.settings.closeDay;
     const closedToday = s.entries.length > 0 && s.entries[0].date === _rv_today && s.entries[0].type !== 'release';
-    const _isCloseDay = _closeDay !== 'varies' && _closeDay === _todayName;
-    const homeMode = _closeDay === 'varies' ? 'varies' : (_isCloseDay ? 'close' : 'open');
+    const homeMode = 'varies';
     const variesRelease = !!s.variesRelease;
     const count = s.entries.filter(e => !e.type || e.type !== 'release').length;
 
@@ -1900,7 +1918,10 @@ class Component extends DCLogic {
       todayLabel: this.fmtUK(new Date()),
       countLabel: count === 0 ? 'This will be your first close.' : ('You\u2019ve closed ' + count + (count === 1 ? ' week' : ' weeks') + ' \u2014 this is your ' + this.ordinal(count + 1) + '.'),
 
-      winChips: (s.draft.wins || []).map((w, i) => ({ key: i, text: w, editing: s.editingWin === i, notEditing: s.editingWin !== i, edit: () => this.editWin(i), onEdit: e => this.updateWin(i, e.target.value), onEditKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.commitWin(i); } }, commit: () => this.commitWin(i), inputRef: el => { if (el) el.focus(); }, remove: () => this.removeWin(i) })),
+      commaSplitToggleStyle: { width: '34px', height: '20px', borderRadius: '20px', background: s.settings.commaSplit ? pal.c : '#DBCDB6', position: 'relative', transition: 'background .2s ease', flex: 'none' },
+      commaSplitToggleKnob: { width: '16px', height: '16px', borderRadius: '50%', background: '#FFF', position: 'absolute', top: '2px', left: s.settings.commaSplit ? '16px' : '2px', transition: 'left .2s ease', boxShadow: '0 1px 3px rgba(0,0,0,.2)' },
+      toggleCommaSplit: () => this.toggleCommaSplit(),
+      winChips: (s.draft.wins || []).map((w, i) => ({ key: i, n: i + 1, text: w, editing: s.editingWin === i, notEditing: s.editingWin !== i, edit: () => this.editWin(i), onEdit: e => this.updateWin(i, e.target.value), onEditKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.commitWin(i); } }, commit: () => this.commitWin(i), inputRef: el => { if (el) el.focus(); }, remove: () => this.removeWin(i) })),
       winInput: s.winInput,
       draftDifferently: s.draft.differently,
       draftCourage: s.draft.courage,
@@ -2062,7 +2083,7 @@ class Component extends DCLogic {
       goLog: () => this.setState({ screen: 'log' }),
       seeThisWeek: () => this.setState({ screen: 'entry' }),
       addWin: () => this.addWin(),
-      onWinInput: e => this.setState({ winInput: e.target.value }),
+      onWinInput: e => this.onWinInput(e.target.value),
       onWinKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.addWin(); } },
       onDifferently: e => { const v = e.target.value; this.setState(st => ({ draft: { ...st.draft, differently: v } })); },
       onHighlight: e => { const v = e.target.value; this.setState(st => ({ draft: { ...st.draft, highlight: v } })); },
